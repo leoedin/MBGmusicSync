@@ -1,0 +1,22 @@
+C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\bin\Debug\mb_TestCSharpDll.dll.config
+C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\bin\Debug\mb_TestCSharpDll.dll
+C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\bin\Debug\mb_TestCSharpDll.pdb
+C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\obj\Debug\Interop.WMPLib.dll
+C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\obj\Debug\MBGmusic.csproj.ResolveComReference.cache
+C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\obj\Debug\mb_TestCSharpDll.dll
+C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\obj\Debug\mb_TestCSharpDll.pdb
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\Debug\GMusicAPI.dll
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\Debug\GMusicAPI.pdb
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\Debug\Newtonsoft.Json.pdb
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\obj\Debug\MusicBeePlugin.Configure.resources
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\obj\Debug\GenerateResource.read.1.tlog
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\obj\Debug\GenerateResource.write.1.tlog
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\Debug\mb_GoogleMusicSync.dll.config
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\Debug\mb_GoogleMusicSync.dll
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\Debug\mb_GoogleMusicSync.pdb
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\obj\Debug\mb_GoogleMusicSync.dll
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\obj\Debug\mb_GoogleMusicSync.pdb

@@ -1,0 +1,14 @@
+C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\bin\x86\Debug\mb_TestCSharpDll.dll.config
+C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\bin\x86\Debug\mb_TestCSharpDll.dll
+C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\bin\x86\Debug\mb_TestCSharpDll.pdb
+C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\bin\x86\Debug\GMusicAPI.dll
+C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\bin\x86\Debug\Newtonsoft.Json.dll
+C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\bin\x86\Debug\GMusicAPI.pdb
+C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\bin\x86\Debug\Newtonsoft.Json.pdb
+C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\bin\x86\Debug\Newtonsoft.Json.xml
+C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\obj\x86\Debug\mb_TestCSharpDll.dll
+C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\obj\x86\Debug\mb_TestCSharpDll.pdb
+C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\obj\x86\Debug\MusicBeePlugin.Configure.resources
+C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\obj\x86\Debug\GenerateResource.write.1.tlog
