@@ -40,7 +40,7 @@ On logging in the plugin fetches a full list of songs and playlists tied to your
 C#/.NET API For Google Play Music
 ----------------------------------
 
-Included in this repository is an incomplete implementation of an API for Google Play Music. This uses the Google MobileClient API also used by the Android Client. There isn't a great deal of documentation on this - most of the protocol was gleaned from the excellent (Python library)[1]. The structure of the API draws heavily on the (.NET API written by Taylor Finnell)[2] which implemented the older and quite broken webclient protocol. The Google HTTP aspect of the library is completely borrowed from Taylor Finnell, while the API surface has been rewritten but follows the same basic structure.
+Included in this repository is an incomplete implementation of an API for Google Play Music. This uses the Google MobileClient API also used by the Android Client. There isn't a great deal of documentation on this - most of the protocol was gleaned from the excellent [Python library][1]. The structure of the API draws heavily on the [.NET API written by Taylor Finnell][2] which implemented the older and quite broken webclient protocol. The Google HTTP aspect of the library is completely borrowed from Taylor Finnell, while the API surface has been rewritten but follows the same basic structure.
 
 [1]: https://github.com/simon-weber/Unofficial-Google-Music-API
 [2]: https://github.com/taylorfinnell/GoogleMusicAPI.NET
