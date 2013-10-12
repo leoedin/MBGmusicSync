@@ -17,9 +17,6 @@ namespace MusicBeePlugin
         private Plugin gmusicPlugin;
         private Plugin.MusicBeeApiInterface mbApiInterface;
 
-
-
-        
         public Configure(Plugin mbPlugin)
         {
             InitializeComponent();
@@ -80,6 +77,7 @@ namespace MusicBeePlugin
             }
             gmusicPlugin.api.OnLoginComplete = new EventHandler(LoginComplete);
             gmusicPlugin.api.Login(emailTextBox.Text, passwordTextBox.Text);
+            closeButton.Enabled = false;
 
         }
 
@@ -95,7 +93,7 @@ namespace MusicBeePlugin
                 if (authToken != null)
                 {
                     this.loginStatusLabel.Text = "Successfully logged in.";
-                    this.syncStatusLabel.Text = "Fetching remote playlists...";
+                    this.fetchPlaylistStatusLabel.Text = "Fetching remote playlists...";
                     // Save the auth token to file
                     gmusicPlugin.SavedSettings.authorizationToken = authToken;
                     gmusicPlugin.SaveSettings();
@@ -112,14 +110,22 @@ namespace MusicBeePlugin
         {
             this.Invoke(new MethodInvoker(delegate
             {
+                this.closeButton.Enabled = true;
                 this.syncNowButton.Enabled = true;
                 this.autoSyncCheckbox.Enabled = true;
-                this.syncStatusLabel.Text = "Song and playlist data fetched.";
+                this.fetchPlaylistStatusLabel.Text = "Song and playlist data fetched.";
                 List<GMusicPlaylist> allPlaylists = gmusicPlugin.AllPlaylists;
                 googleMusicPlaylistBox.Items.Clear();
                 foreach (GMusicPlaylist playlist in allPlaylists)
+                {
                     if (!playlist.Deleted)
-                        googleMusicPlaylistBox.Items.Add(playlist);
+                    {
+                        if (gmusicPlugin.SavedSettings.gMusicPlaylistsToSync.Contains(playlist.ID))
+                            googleMusicPlaylistBox.Items.Add(playlist, true);
+                        else
+                            googleMusicPlaylistBox.Items.Add(playlist, false);
+                    }
+                }
             }));
         }
 
@@ -144,26 +150,47 @@ namespace MusicBeePlugin
             gmusicPlugin.SaveSettings();
         }
 
+        // Depending on user settings, either start a local sync to remote, or start a remote sync to local
         private void syncNowButton_Click(object sender, EventArgs e)
         {
-            // Make sure we're logged in
-            // Should probably get a new auth token if save credentials is checked...
-            if (GoogleHTTP.AuthorizationToken == null)
-                gmusicPlugin.api.Login(gmusicPlugin.SavedSettings.authorizationToken);
+            // Make sure we're logged in and have playlists, otherwise stop
+            if (GoogleHTTP.AuthorizationToken == null || gmusicPlugin.AllPlaylists.Count == 0)
+            {
+                this.loginStatusLabel.Text = "Error, not logged in";
+                return;
+            }
 
+            closeButton.Enabled = false;
             syncStatusLabel.Text = "Now synchronising. Please wait.";
 
-            gmusicPlugin.OnSyncComplete = OnSync;
-
-            gmusicPlugin.SyncPlaylistsToGMusic();            
+            if (gmusicPlugin.SavedSettings.syncLocalToRemote)
+            {
+                gmusicPlugin.OnSyncComplete = OnSync;
+                gmusicPlugin.SyncPlaylistsToGMusic();
+            }
+            else
+            {
+                List<GMusicPlaylist> selected = new List<GMusicPlaylist>();
+                foreach (GMusicPlaylist selectedPlaylist in googleMusicPlaylistBox.CheckedItems)
+                    selected.Add(selectedPlaylist);
+                gmusicPlugin.OnSyncToLocalComplete = OnSync;
+                gmusicPlugin.SyncPlaylistsToMusicBee(selected);
+            }
 
         }
 
+        // We've successfully synchronised. Fetch the playlists again to update the view
         private void OnSync()
         {
             this.Invoke(new MethodInvoker(delegate
             {
                 syncStatusLabel.Text = "Synchronisation done!";
+                fetchPlaylistStatusLabel.Text = "Refreshing remote playlists";
+                closeButton.Enabled = false;
+                this.PopulateLocalPlaylists();
+                // Just refresh the playlists (don't bother fetching all the songs again)
+                gmusicPlugin.OnFetchDataComplete = OnFetchData;
+                gmusicPlugin.RefreshPlaylists();
             }));
         }
 
@@ -176,6 +203,18 @@ namespace MusicBeePlugin
             }
             gmusicPlugin.SaveSettings();
         }
+
+        private void googleMusicPlaylistBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            gmusicPlugin.SavedSettings.gMusicPlaylistsToSync.Clear();
+            foreach (GMusicPlaylist playlist in googleMusicPlaylistBox.CheckedItems)
+            {
+                gmusicPlugin.SavedSettings.gMusicPlaylistsToSync.Add(playlist.ID);
+            }
+            gmusicPlugin.SaveSettings();
+        }
+
+        
 
         private void allLocalPlayCheckbox_CheckedChanged(object sender, EventArgs e)
         {
@@ -210,6 +249,29 @@ namespace MusicBeePlugin
         {
             this.Close();
         }
+
+        private void toGMusicRadiobutton_CheckedChanged(object sender, EventArgs e)
+        {
+
+            if (toGMusicRadiobutton.Checked)
+            {
+                fromGMusicRadioButton.Checked = false;
+                gmusicPlugin.SavedSettings.syncLocalToRemote = true;
+            }
+            else
+            {
+                gmusicPlugin.SavedSettings.syncLocalToRemote = false;
+            }
+            gmusicPlugin.SaveSettings();
+        }
+
+        private void fromGMusicRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (fromGMusicRadioButton.Checked)
+                toGMusicRadiobutton.Checked = false;
+        }
+
+
 
         
     }

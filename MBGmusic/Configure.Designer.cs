@@ -46,6 +46,11 @@
             this.allLocalPlayCheckbox = new System.Windows.Forms.CheckBox();
             this.allRemotePlayCheckbox = new System.Windows.Forms.CheckBox();
             this.closeButton = new System.Windows.Forms.Button();
+            this.toGMusicRadiobutton = new System.Windows.Forms.RadioButton();
+            this.fromGMusicRadioButton = new System.Windows.Forms.RadioButton();
+            this.fetchPlaylistStatusLabel = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // loginButton
@@ -104,18 +109,16 @@
             // warnSaveLabel
             // 
             this.warnSaveLabel.AutoSize = true;
-            this.warnSaveLabel.Location = new System.Drawing.Point(324, 52);
+            this.warnSaveLabel.Location = new System.Drawing.Point(500, 9);
             this.warnSaveLabel.Name = "warnSaveLabel";
-            this.warnSaveLabel.Size = new System.Drawing.Size(239, 26);
+            this.warnSaveLabel.Size = new System.Drawing.Size(65, 39);
             this.warnSaveLabel.TabIndex = 6;
-            this.warnSaveLabel.Text = "NOTE: Checking \"Remember\" will store your \r\nGoogle login details in plain text on" +
-                " this computer.";
+            this.warnSaveLabel.Text = "Stores login \r\ndetails in \r\nplain text!";
             // 
             // autoSyncCheckbox
             // 
             this.autoSyncCheckbox.AutoSize = true;
-            this.autoSyncCheckbox.Enabled = false;
-            this.autoSyncCheckbox.Location = new System.Drawing.Point(211, 98);
+            this.autoSyncCheckbox.Location = new System.Drawing.Point(148, 553);
             this.autoSyncCheckbox.Name = "autoSyncCheckbox";
             this.autoSyncCheckbox.Size = new System.Drawing.Size(102, 17);
             this.autoSyncCheckbox.TabIndex = 7;
@@ -126,18 +129,18 @@
             // syncNowButton
             // 
             this.syncNowButton.Enabled = false;
-            this.syncNowButton.Location = new System.Drawing.Point(12, 92);
+            this.syncNowButton.Location = new System.Drawing.Point(148, 524);
             this.syncNowButton.Name = "syncNowButton";
-            this.syncNowButton.Size = new System.Drawing.Size(167, 27);
+            this.syncNowButton.Size = new System.Drawing.Size(125, 23);
             this.syncNowButton.TabIndex = 8;
-            this.syncNowButton.Text = "Synchronise To Google Music";
+            this.syncNowButton.Text = "Synchronise Selected";
             this.syncNowButton.UseVisualStyleBackColor = true;
             this.syncNowButton.Click += new System.EventHandler(this.syncNowButton_Click);
             // 
             // loginStatusLabel
             // 
             this.loginStatusLabel.AutoSize = true;
-            this.loginStatusLabel.Location = new System.Drawing.Point(8, 52);
+            this.loginStatusLabel.Location = new System.Drawing.Point(15, 60);
             this.loginStatusLabel.Name = "loginStatusLabel";
             this.loginStatusLabel.Size = new System.Drawing.Size(70, 13);
             this.loginStatusLabel.TabIndex = 9;
@@ -146,7 +149,7 @@
             // syncStatusLabel
             // 
             this.syncStatusLabel.AutoSize = true;
-            this.syncStatusLabel.Location = new System.Drawing.Point(8, 74);
+            this.syncStatusLabel.Location = new System.Drawing.Point(305, 531);
             this.syncStatusLabel.Name = "syncStatusLabel";
             this.syncStatusLabel.Size = new System.Drawing.Size(69, 13);
             this.syncStatusLabel.TabIndex = 10;
@@ -156,7 +159,7 @@
             // 
             this.localPlaylistBox.CheckOnClick = true;
             this.localPlaylistBox.FormattingEnabled = true;
-            this.localPlaylistBox.Location = new System.Drawing.Point(15, 171);
+            this.localPlaylistBox.Location = new System.Drawing.Point(6, 46);
             this.localPlaylistBox.Name = "localPlaylistBox";
             this.localPlaylistBox.Size = new System.Drawing.Size(265, 364);
             this.localPlaylistBox.TabIndex = 11;
@@ -166,15 +169,16 @@
             // 
             this.googleMusicPlaylistBox.CheckOnClick = true;
             this.googleMusicPlaylistBox.FormattingEnabled = true;
-            this.googleMusicPlaylistBox.Location = new System.Drawing.Point(286, 171);
+            this.googleMusicPlaylistBox.Location = new System.Drawing.Point(282, 46);
             this.googleMusicPlaylistBox.Name = "googleMusicPlaylistBox";
-            this.googleMusicPlaylistBox.Size = new System.Drawing.Size(277, 364);
+            this.googleMusicPlaylistBox.Size = new System.Drawing.Size(265, 364);
             this.googleMusicPlaylistBox.TabIndex = 12;
+            this.googleMusicPlaylistBox.SelectedIndexChanged += new System.EventHandler(this.googleMusicPlaylistBox_SelectedIndexChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 148);
+            this.label1.Location = new System.Drawing.Point(6, 24);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(72, 13);
             this.label1.TabIndex = 13;
@@ -183,7 +187,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(287, 148);
+            this.label2.Location = new System.Drawing.Point(279, 24);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(111, 13);
             this.label2.TabIndex = 14;
@@ -192,7 +196,7 @@
             // allLocalPlayCheckbox
             // 
             this.allLocalPlayCheckbox.AutoSize = true;
-            this.allLocalPlayCheckbox.Location = new System.Drawing.Point(211, 147);
+            this.allLocalPlayCheckbox.Location = new System.Drawing.Point(199, 23);
             this.allLocalPlayCheckbox.Name = "allLocalPlayCheckbox";
             this.allLocalPlayCheckbox.Size = new System.Drawing.Size(70, 17);
             this.allLocalPlayCheckbox.TabIndex = 15;
@@ -203,7 +207,7 @@
             // allRemotePlayCheckbox
             // 
             this.allRemotePlayCheckbox.AutoSize = true;
-            this.allRemotePlayCheckbox.Location = new System.Drawing.Point(493, 147);
+            this.allRemotePlayCheckbox.Location = new System.Drawing.Point(477, 23);
             this.allRemotePlayCheckbox.Name = "allRemotePlayCheckbox";
             this.allRemotePlayCheckbox.Size = new System.Drawing.Size(70, 17);
             this.allRemotePlayCheckbox.TabIndex = 16;
@@ -213,7 +217,7 @@
             // 
             // closeButton
             // 
-            this.closeButton.Location = new System.Drawing.Point(488, 545);
+            this.closeButton.Location = new System.Drawing.Point(490, 550);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(75, 23);
             this.closeButton.TabIndex = 17;
@@ -221,19 +225,65 @@
             this.closeButton.UseVisualStyleBackColor = true;
             this.closeButton.Click += new System.EventHandler(this.closeButton_Click);
             // 
+            // toGMusicRadiobutton
+            // 
+            this.toGMusicRadiobutton.AutoSize = true;
+            this.toGMusicRadiobutton.Checked = true;
+            this.toGMusicRadiobutton.Location = new System.Drawing.Point(12, 527);
+            this.toGMusicRadiobutton.Name = "toGMusicRadiobutton";
+            this.toGMusicRadiobutton.Size = new System.Drawing.Size(106, 17);
+            this.toGMusicRadiobutton.TabIndex = 18;
+            this.toGMusicRadiobutton.TabStop = true;
+            this.toGMusicRadiobutton.Text = "To Google Music";
+            this.toGMusicRadiobutton.UseVisualStyleBackColor = true;
+            this.toGMusicRadiobutton.CheckedChanged += new System.EventHandler(this.toGMusicRadiobutton_CheckedChanged);
+            // 
+            // fromGMusicRadioButton
+            // 
+            this.fromGMusicRadioButton.AutoSize = true;
+            this.fromGMusicRadioButton.Location = new System.Drawing.Point(12, 550);
+            this.fromGMusicRadioButton.Name = "fromGMusicRadioButton";
+            this.fromGMusicRadioButton.Size = new System.Drawing.Size(116, 17);
+            this.fromGMusicRadioButton.TabIndex = 19;
+            this.fromGMusicRadioButton.Text = "From Google Music";
+            this.fromGMusicRadioButton.UseVisualStyleBackColor = true;
+            this.fromGMusicRadioButton.CheckedChanged += new System.EventHandler(this.fromGMusicRadioButton_CheckedChanged);
+            // 
+            // fetchPlaylistStatusLabel
+            // 
+            this.fetchPlaylistStatusLabel.AutoSize = true;
+            this.fetchPlaylistStatusLabel.Location = new System.Drawing.Point(420, 60);
+            this.fetchPlaylistStatusLabel.Name = "fetchPlaylistStatusLabel";
+            this.fetchPlaylistStatusLabel.Size = new System.Drawing.Size(139, 13);
+            this.fetchPlaylistStatusLabel.TabIndex = 20;
+            this.fetchPlaylistStatusLabel.Text = "Login to see remote playlists";
+            this.fetchPlaylistStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.allLocalPlayCheckbox);
+            this.groupBox1.Controls.Add(this.localPlaylistBox);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.allRemotePlayCheckbox);
+            this.groupBox1.Controls.Add(this.googleMusicPlaylistBox);
+            this.groupBox1.Location = new System.Drawing.Point(12, 85);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(553, 422);
+            this.groupBox1.TabIndex = 21;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Set Up Sync";
+            // 
             // Configure
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(575, 580);
-            this.Controls.Add(this.closeButton);
-            this.Controls.Add(this.allRemotePlayCheckbox);
-            this.Controls.Add(this.allLocalPlayCheckbox);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.googleMusicPlaylistBox);
-            this.Controls.Add(this.localPlaylistBox);
+            this.ClientSize = new System.Drawing.Size(577, 585);
+            this.Controls.Add(this.fetchPlaylistStatusLabel);
             this.Controls.Add(this.syncStatusLabel);
+            this.Controls.Add(this.fromGMusicRadioButton);
+            this.Controls.Add(this.toGMusicRadiobutton);
+            this.Controls.Add(this.closeButton);
             this.Controls.Add(this.loginStatusLabel);
             this.Controls.Add(this.syncNowButton);
             this.Controls.Add(this.autoSyncCheckbox);
@@ -244,8 +294,11 @@
             this.Controls.Add(this.emailLabel);
             this.Controls.Add(this.emailTextBox);
             this.Controls.Add(this.loginButton);
+            this.Controls.Add(this.groupBox1);
             this.Name = "Configure";
             this.Text = "Google Music Sync";
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -271,5 +324,9 @@
         private System.Windows.Forms.CheckBox allLocalPlayCheckbox;
         private System.Windows.Forms.CheckBox allRemotePlayCheckbox;
         private System.Windows.Forms.Button closeButton;
+        private System.Windows.Forms.RadioButton toGMusicRadiobutton;
+        private System.Windows.Forms.RadioButton fromGMusicRadioButton;
+        private System.Windows.Forms.Label fetchPlaylistStatusLabel;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }

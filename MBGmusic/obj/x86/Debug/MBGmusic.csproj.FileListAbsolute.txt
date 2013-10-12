@@ -12,3 +12,17 @@ C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\obj\x86\Debug
 C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\obj\x86\Debug\MusicBeePlugin.Configure.resources
 C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\obj\x86\Debug\GenerateResource.read.1.tlog
 C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\EmbeddedGMusicPlugin\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\x86\Debug\mb_GoogleMusicSync.dll.config
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\x86\Debug\mb_GoogleMusicSync.dll
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\x86\Debug\mb_GoogleMusicSync.pdb
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\x86\Debug\GMusicAPI.dll
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\x86\Debug\Newtonsoft.Json.dll
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\x86\Debug\GMusicAPI.pdb
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\x86\Debug\Newtonsoft.Json.pdb
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\x86\Debug\Newtonsoft.Json.xml
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\obj\x86\Debug\MusicBeePlugin.Configure.resources
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\obj\x86\Debug\mb_GoogleMusicSync.dll
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\obj\x86\Debug\mb_GoogleMusicSync.pdb

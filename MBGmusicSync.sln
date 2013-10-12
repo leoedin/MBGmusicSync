@@ -5,28 +5,50 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GMusicAPI", "GMusicAPI\GMus
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MBGmusic", "MBGmusic\MBGmusic.csproj", "{F5D46BA1-6F21-40EF-9695-46105CCACD08}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGMusicAPI", "TestGMusicAPI\TestGMusicAPI.csproj", "{D61BD1FC-DE73-40B5-91DF-D8E756FC752C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
 		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{7CB6C040-ECBA-451F-8426-ECC4F59CF7CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7CB6C040-ECBA-451F-8426-ECC4F59CF7CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CB6C040-ECBA-451F-8426-ECC4F59CF7CC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7CB6C040-ECBA-451F-8426-ECC4F59CF7CC}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{7CB6C040-ECBA-451F-8426-ECC4F59CF7CC}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{7CB6C040-ECBA-451F-8426-ECC4F59CF7CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7CB6C040-ECBA-451F-8426-ECC4F59CF7CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CB6C040-ECBA-451F-8426-ECC4F59CF7CC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7CB6C040-ECBA-451F-8426-ECC4F59CF7CC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{7CB6C040-ECBA-451F-8426-ECC4F59CF7CC}.Release|x86.ActiveCfg = Release|Any CPU
 		{F5D46BA1-6F21-40EF-9695-46105CCACD08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F5D46BA1-6F21-40EF-9695-46105CCACD08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5D46BA1-6F21-40EF-9695-46105CCACD08}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{F5D46BA1-6F21-40EF-9695-46105CCACD08}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{F5D46BA1-6F21-40EF-9695-46105CCACD08}.Debug|x86.ActiveCfg = Debug|x86
 		{F5D46BA1-6F21-40EF-9695-46105CCACD08}.Debug|x86.Build.0 = Debug|x86
 		{F5D46BA1-6F21-40EF-9695-46105CCACD08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5D46BA1-6F21-40EF-9695-46105CCACD08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5D46BA1-6F21-40EF-9695-46105CCACD08}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{F5D46BA1-6F21-40EF-9695-46105CCACD08}.Release|Mixed Platforms.Build.0 = Release|x86
 		{F5D46BA1-6F21-40EF-9695-46105CCACD08}.Release|x86.ActiveCfg = Release|x86
 		{F5D46BA1-6F21-40EF-9695-46105CCACD08}.Release|x86.Build.0 = Release|x86
+		{D61BD1FC-DE73-40B5-91DF-D8E756FC752C}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{D61BD1FC-DE73-40B5-91DF-D8E756FC752C}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{D61BD1FC-DE73-40B5-91DF-D8E756FC752C}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{D61BD1FC-DE73-40B5-91DF-D8E756FC752C}.Debug|x86.ActiveCfg = Debug|x86
+		{D61BD1FC-DE73-40B5-91DF-D8E756FC752C}.Debug|x86.Build.0 = Debug|x86
+		{D61BD1FC-DE73-40B5-91DF-D8E756FC752C}.Release|Any CPU.ActiveCfg = Release|x86
+		{D61BD1FC-DE73-40B5-91DF-D8E756FC752C}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{D61BD1FC-DE73-40B5-91DF-D8E756FC752C}.Release|Mixed Platforms.Build.0 = Release|x86
+		{D61BD1FC-DE73-40B5-91DF-D8E756FC752C}.Release|x86.ActiveCfg = Release|x86
+		{D61BD1FC-DE73-40B5-91DF-D8E756FC752C}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

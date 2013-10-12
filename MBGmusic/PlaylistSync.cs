@@ -36,7 +36,10 @@ namespace MusicBeePlugin
         public _OnFetchDataCompleteDelegate OnFetchDataComplete;
 
         public delegate void _OnSyncCompleteDelegate();
-        public _OnSyncCompleteDelegate OnSyncComplete; 
+        public _OnSyncCompleteDelegate OnSyncComplete;
+
+        public delegate void _OnSyncToLocalCompleteDelegate();
+        public _OnSyncToLocalCompleteDelegate OnSyncToLocalComplete;
 
         public struct SavedSettingsType
         {
@@ -45,14 +48,16 @@ namespace MusicBeePlugin
             public String password;
             public String email;
             public Boolean saveCredentials;
+            public Boolean syncLocalToRemote;
 
             public List<String> mbPlaylistsToSync;
+            public List<String> gMusicPlaylistsToSync;
         }
 
         public SavedSettingsType SavedSettings;
         public String ConfigFilePath;
 
-        public struct MbPlaylistType
+        public class MbPlaylistType
         {
             public String mbName;
             public String Name;
@@ -60,6 +65,19 @@ namespace MusicBeePlugin
             {
                 return Name;
             }
+        }
+
+        public class MbSongType
+        {
+            public String Filename;
+            public String Artist;
+            public String Title;
+
+            public override string ToString()
+            {
+                return Artist + " - " + Title;
+            }
+
         }
 
         // This exists to let us wait for callbacks when inside loops or similar
@@ -89,9 +107,12 @@ namespace MusicBeePlugin
 
             SavedSettings = new SavedSettingsType();
             SavedSettings.mbPlaylistsToSync = new List<String>();
+            SavedSettings.gMusicPlaylistsToSync = new List<String>();
+
 
             // load defaults
             SavedSettings.syncOnStartup = false;
+            SavedSettings.syncLocalToRemote = true;
 
             // Process taken from tag tools
             //Lets try to read defaults for controls from settings file
@@ -171,13 +192,15 @@ namespace MusicBeePlugin
                     // Do a sync straight after we get the playlists
                     if (SavedSettings.syncOnStartup)
                     {
-                        OnFetchDataComplete = SyncPlaylistsToGMusic;
+                        OnFetchDataComplete = SyncPlaylists;
                         LoginToGMusic();
                     }
                     
                     break;
             }
         }
+
+
 
         private void LoginToGMusic()
         {
@@ -226,6 +249,13 @@ namespace MusicBeePlugin
             api.GetAllPlaylists();
         }
 
+        // Just update the playlists
+        public void RefreshPlaylists()
+        {
+            api.OnGetAllPlaylistSongsComplete = OnGetAllPlaylists;
+            api.GetAllPlaylists();
+        }
+
         private void OnGetAllPlaylists(List<GMusicPlaylist> playlists)
         {
             allPlaylists = playlists;
@@ -257,6 +287,47 @@ namespace MusicBeePlugin
             }
 
             return MbPlaylists;
+        }
+
+        public List<MbSongType> GetMbSongs()
+        {
+            string[] files;
+            List<MbSongType> allMbSongs = new List<MbSongType>();
+
+            if (mbApiInterface.Library_QueryFiles("domain=library"))
+                files = mbApiInterface.Library_QueryGetAllFiles().Split(filesSeparators, StringSplitOptions.RemoveEmptyEntries);
+            else
+                files = new string[0];
+
+            foreach (string path in files)
+            {
+                MbSongType thisSong = new MbSongType();
+                thisSong.Filename = path;
+                thisSong.Artist = mbApiInterface.Library_GetFileTag(path, MetaDataType.Artist);
+                thisSong.Title = mbApiInterface.Library_GetFileTag(path, MetaDataType.TrackTitle);
+                allMbSongs.Add(thisSong);
+            }
+            return allMbSongs;
+        }
+
+        private void SyncPlaylists()
+        {
+            if (SavedSettings.syncLocalToRemote)
+            {
+                SyncPlaylistsToGMusic();
+            }
+            else
+            {
+                List<GMusicPlaylist> playlists = new List<GMusicPlaylist>();
+                foreach (string id in SavedSettings.gMusicPlaylistsToSync)
+                {
+                    GMusicPlaylist pls = allPlaylists.FirstOrDefault(p => p.ID == id);
+                    if (pls != null)
+                        playlists.Add(pls);
+                }
+                SyncPlaylistsToMusicBee(playlists);
+            }
+
         }
 
         // Synchronise the playlists defined in the settings file to Google Music
@@ -334,6 +405,80 @@ namespace MusicBeePlugin
             if (OnSyncComplete != null)
                 OnSyncComplete();
 
+        }
+
+        // Go through the selected playlists from GMusic,
+        // delete the correspondingly named MusicBee playlist
+        // Create a new playlist with the GMusic playlist contents
+        public void SyncPlaylistsToMusicBee(List<GMusicPlaylist> playlists)
+        {
+            List<MbPlaylistType> localPlaylists = GetMbPlaylists();
+            // The API doesn't give us a directory for playlists, 
+            // We need to guess by finding the root directory of the first playlist
+            MbPlaylistType useForDir = localPlaylists.First();
+            String playlistDir = new FileInfo(useForDir.mbName).DirectoryName;
+            if (useForDir.Name.Contains('\\'))
+            {
+                String folder = useForDir.Name.Split('\\')[0];
+                playlistDir = playlistDir.Replace(folder, "");
+            }
+            
+            
+            List<MbSongType> allMbSongs = GetMbSongs();
+
+            // Go through each playlist we want to sync in turn
+            foreach (GMusicPlaylist playlist in playlists)
+            {
+                // Create an empty list for this playlist's local songs
+                List<MbSongType> mbPlaylistSongs = new List<MbSongType>();
+                
+                // For each entry in the playlist we're syncing, get the song from the GMusic library we've downloaded,
+                // Get the song Title and Artist and then look it up in the list of local songs.
+                // If we find it, add it to the list of local songs
+                foreach (GMusicPlaylistEntry entry in playlist.Songs)
+                {
+                    GMusicSong thisSong = allSongs.FirstOrDefault(s => s.ID == entry.TrackID);
+                    if (thisSong != null)
+                    {
+                        MbSongType thisMbSong = allMbSongs.FirstOrDefault(s => s.Artist == thisSong.Artist && s.Title == thisSong.Title);
+                        if (thisMbSong != null)
+                            mbPlaylistSongs.Add(thisMbSong);
+                    }
+                }
+
+                //mbAPI expects a string array of song filenames to create a playlist
+                string[] mbPlaylistSongFiles = new string[mbPlaylistSongs.Count];
+                int i=0;
+                foreach (MbSongType song in mbPlaylistSongs)
+                {
+                    mbPlaylistSongFiles[i] = song.Filename;
+                    i++;
+                }
+                // Now we need to either clear (by deleting and recreating the file) or create the playlist 
+                MbPlaylistType localPlaylist = localPlaylists.FirstOrDefault(p => p.Name == playlist.Name);
+                if (localPlaylist != null)
+                {
+                    string playlistPath = localPlaylist.mbName;
+                    // delete the local playlist
+                    File.Delete(playlistPath);
+                    // And create a new empty file in its place
+                    File.Create(playlistPath).Dispose();
+
+                    // Set all our new files into the playlist
+                    mbApiInterface.Playlist_SetFiles(localPlaylist.mbName, mbPlaylistSongFiles);
+                }
+                else
+                {
+                    // Create the playlist
+                    mbApiInterface.Playlist_CreatePlaylist(playlistDir, playlist.Name, mbPlaylistSongFiles);
+                }
+
+
+            }
+
+            // Call the delegate
+            if (OnSyncToLocalComplete != null)
+                OnSyncToLocalComplete();
         }
 
         private void OnCreatePlaylist(MutateResponse response)

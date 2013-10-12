@@ -21,9 +21,9 @@ namespace GMusicAPI
         public delegate void _GetAllSongs(List<GMusicSong> songList);
         public _GetAllSongs OnGetAllSongsComplete;
 
-       // public delegate void _GetAllPlaylists(List<GMusicPlaylist> playlists);
-       // public _GetAllPlaylists OnGetAllPlaylistsComplete;
-        
+        // public delegate void _GetAllPlaylists(List<GMusicPlaylist> playlists);
+        // public _GetAllPlaylists OnGetAllPlaylistsComplete;
+
         public delegate void _GetAllPlaylistSongs(List<GMusicPlaylist> playlists);
         public _GetAllPlaylistSongs OnGetAllPlaylistSongsComplete;
 
@@ -54,7 +54,7 @@ namespace GMusicAPI
         {
             client = new GoogleHTTP();
             // JSON is parsed into the tracksReceived class
-            
+
             allSongs = new List<GMusicSong>();
             allPlaylists = new List<GMusicPlaylist>();
         }
@@ -93,7 +93,7 @@ namespace GMusicAPI
                 OnError(error);
                 return;
             }
-            
+
 
             string CountTemplate = @"Auth=(?<AUTH>(.*?))$";
             Regex CountRegex = new Regex(CountTemplate, RegexOptions.IgnoreCase);
@@ -101,7 +101,7 @@ namespace GMusicAPI
 
             if (!(auth == ""))
                 GoogleHTTP.AuthorizationToken = auth;
-            
+
             if (OnLoginComplete != null)
                 OnLoginComplete(this, EventArgs.Empty);
         }
@@ -109,9 +109,19 @@ namespace GMusicAPI
         // Get all the songs at once. The "max-results: 20000" should do it in one request.
         // Next page either provided as data (http://stackoverflow.com/questions/16638356/google-music-api-how-to-request-the-next-1000-songs)
         // or provide "maxresults: 20000" for all songs
-        public void GetAllSongs(String nextPageToken = "")
+        public void GetAllSongs()
         {
-            String dataString = "{'max-results':'20000'}";
+            // Clear the list of anything old
+            allSongs = new List<GMusicSong>();
+            GetAllSongsRequest();
+        }
+
+        private void GetAllSongsRequest(String nextPageToken = "")
+        {
+            String dataString = "";
+            if (nextPageToken != "")
+                dataString = "{'start-token':'" + nextPageToken + "'}";
+
             byte[] data = Encoding.UTF8.GetBytes(dataString);
             client.UploadDataAsync(new Uri("https://www.googleapis.com/sj/v1.1/trackfeed?alt=json&updated-min=0&include-tracks=true"), data, TrackListReceived);
         }
@@ -126,25 +136,44 @@ namespace GMusicAPI
                 return;
             }
 
-            // As long as we're only doing this once (requesting 20,000 songs at once)
-            // we can clear allSongs here
-            allSongs.Clear();
-
             GMusicSongs tracksReceived = new GMusicSongs();
             tracksReceived = JsonConvert.DeserializeObject<GMusicSongs>(jsonData);
 
             foreach (GMusicSong song in tracksReceived.Data.AllSongs)
                 allSongs.Add(song);
 
+
+            // Check for a nextPageToken, and if there is one go round the loop again
+            JObject songJson = JObject.Parse(jsonData);
+            string nextPageToken = "";
+            try { nextPageToken = songJson["nextPageToken"].ToString(); }
+            catch { }
+
+            if (nextPageToken != "")
+            {
+                GetAllSongsRequest(nextPageToken);
+                return;
+            }
+
             if (OnGetAllSongsComplete != null)
                 OnGetAllSongsComplete(allSongs);
 
         }
 
-        // Fetch the full list of playlists
         public void GetAllPlaylists()
         {
-            byte[] data = Encoding.UTF8.GetBytes("");
+            allPlaylists = new List<GMusicPlaylist>();
+            GetAllPlaylistRequest();
+        }
+
+        // Fetch the full list of playlists
+        private void GetAllPlaylistRequest(string nextPageToken = "")
+        {
+            String dataString = "";
+            if (nextPageToken != "")
+                dataString = "{'start-token':'" + nextPageToken + "'}";
+            byte[] data = Encoding.UTF8.GetBytes(dataString);
+
             client.UploadDataAsync(new Uri("https://www.googleapis.com/sj/v1.1/playlistfeed?alt=json&updated-min=0&include-tracks=true"), data, PlaylistsReceived);
 
         }
@@ -166,10 +195,22 @@ namespace GMusicAPI
                 }
             }
 
-            allPlaylists = new List<GMusicPlaylist>();
+
 
             foreach (GMusicPlaylist playlist in playlistsReceived.Data.AllPlaylists)
                 allPlaylists.Add(playlist);
+
+            // Check for a nextPageToken, and if there is one go round the loop again
+            JObject playlistJson = JObject.Parse(jsonData);
+            string nextPageToken = "";
+            try { nextPageToken = playlistJson["nextPageToken"].ToString(); }
+            catch { }
+
+            if (nextPageToken != "")
+            {
+                GetAllPlaylistRequest(nextPageToken);
+                return;
+            }
 
             GetAllPlaylistSongs();
 
@@ -181,9 +222,12 @@ namespace GMusicAPI
         }
 
         // We have to get a full list of songs which are in playlists, and then populate the list of playlists with them
-        public void GetAllPlaylistSongs()
+        public void GetAllPlaylistSongs(string nextPageToken = "")
         {
-            byte[] data = Encoding.UTF8.GetBytes("");
+            String dataString = "";
+            if (nextPageToken != "")
+                dataString = "{'start-token':'" + nextPageToken + "'}";
+            byte[] data = Encoding.UTF8.GetBytes(dataString);
             client.UploadDataAsync(new Uri("https://www.googleapis.com/sj/v1.1/plentryfeed?alt=json&updated-min=0&include-tracks=true"), data, PlaylistSongsReceived);
         }
 
@@ -201,12 +245,24 @@ namespace GMusicAPI
                 GMusicPlaylist thisPlaylist = allPlaylists.FirstOrDefault(p => p.ID == thisSong.PlaylistID);
                 if (thisPlaylist != null)
                 {
-                    allPlaylists.Remove(thisPlaylist);
+                    // I think as the list contains a reference to the object, it will be updated
                     thisPlaylist.Songs.Add(thisSong);
-                    allPlaylists.Add(thisPlaylist);
                 }
             }
- 
+
+            // Check to see if there's a nextpage token
+            // This try/catch approach is pretty awful and done because of laziness. I assume
+            // Json.Net has some sort of "does token exist" method?
+            string nextPageToken = "";
+            try { nextPageToken = allSongsReceived["nextPageToken"].ToString(); }
+            catch { }
+
+            if (nextPageToken != "")
+            {
+                GetAllPlaylistSongs(nextPageToken);
+                return;
+            }
+
             if (OnGetAllPlaylistSongsComplete != null)
                 OnGetAllPlaylistSongsComplete(allPlaylists);
         }
@@ -322,7 +378,7 @@ namespace GMusicAPI
             // This function is taken more or less completely from def build_plentry_adds() in
             // the unofficial google music API
             JArray songsToAdd = new JArray();
-            
+
             int i = 0;
             foreach (GMusicSong song in songs)
             {
@@ -377,7 +433,7 @@ namespace GMusicAPI
         // Note that the caller needs to determine the song IDs from the Playlist's Songs list
         public void DeleteFromPlaylist(List<GMusicPlaylistEntry> playlistEntries)
         {
-           
+
             JArray songsToDelete = new JArray();
             foreach (GMusicPlaylistEntry entry in playlistEntries)
             {
@@ -394,7 +450,7 @@ namespace GMusicAPI
 
             byte[] data = Encoding.UTF8.GetBytes(requestData.ToString());
             client.UploadDataAsync(new Uri("https://www.googleapis.com/sj/v1.1/plentriesbatch?alt=json"), data, PlaylistSongsDeleted);
-        
+
         }
 
         private void PlaylistSongsDeleted(HttpWebRequest request, HttpWebResponse response, String jsonData, Exception error)
