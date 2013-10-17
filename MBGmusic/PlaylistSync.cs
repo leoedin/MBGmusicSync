@@ -147,13 +147,17 @@ namespace MusicBeePlugin
 
         public bool Configure(IntPtr panelHandle)
         {
-            // save any persistent settings in a sub-folder of this path
-            string dataPath = mbApiInterface.Setting_GetPersistentStoragePath();
+
+            int backColor = mbApiInterface.Setting_GetSkinElementColour(SkinElement.SkinInputControl, ElementState.ElementStateDefault,
+                                                                               ElementComponent. ComponentBackground);
+            int foreColor = mbApiInterface.Setting_GetSkinElementColour(SkinElement.SkinInputControl, ElementState.ElementStateDefault,
+                                                                               ElementComponent. ComponentForeground);
+
 
             Configure configureForm = new Configure(this);
             configureForm.Show();
 
-            return false;
+            return true;
         }
 
         // called by MusicBee when the user clicks Apply or Save in the MusicBee Preferences screen.
@@ -179,6 +183,8 @@ namespace MusicBeePlugin
         // uninstall this plugin - clean up any persisted files
         public void Uninstall()
         {
+            // delete the config file
+            File.Delete(ConfigFilePath);
         }
 
         // receive event notifications from MusicBee
