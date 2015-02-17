@@ -77,9 +77,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GMusicAPI\GMusicAPI.csproj">
-      <Project>{7CB6C040-ECBA-451F-8426-ECC4F59CF7CC}</Project>
-      <Name>GMusicAPI</Name>
+    <ProjectReference Include="..\MBGmusic\MBGMusic.csproj">
+      <Project>{F5D46BA1-6F21-40EF-9695-46105CCACD08}</Project>
+      <Name>MBGMusic</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

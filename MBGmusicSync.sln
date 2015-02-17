@@ -1,9 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GMusicAPI", "GMusicAPI\GMusicAPI.csproj", "{7CB6C040-ECBA-451F-8426-ECC4F59CF7CC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MBGmusic", "MBGmusic\MBGmusic.csproj", "{F5D46BA1-6F21-40EF-9695-46105CCACD08}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MBGMusic", "MBGmusic\MBGMusic.csproj", "{F5D46BA1-6F21-40EF-9695-46105CCACD08}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGMusicAPI", "TestGMusicAPI\TestGMusicAPI.csproj", "{D61BD1FC-DE73-40B5-91DF-D8E756FC752C}"
 EndProject
@@ -17,16 +15,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7CB6C040-ECBA-451F-8426-ECC4F59CF7CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7CB6C040-ECBA-451F-8426-ECC4F59CF7CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7CB6C040-ECBA-451F-8426-ECC4F59CF7CC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{7CB6C040-ECBA-451F-8426-ECC4F59CF7CC}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{7CB6C040-ECBA-451F-8426-ECC4F59CF7CC}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{7CB6C040-ECBA-451F-8426-ECC4F59CF7CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7CB6C040-ECBA-451F-8426-ECC4F59CF7CC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7CB6C040-ECBA-451F-8426-ECC4F59CF7CC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{7CB6C040-ECBA-451F-8426-ECC4F59CF7CC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{7CB6C040-ECBA-451F-8426-ECC4F59CF7CC}.Release|x86.ActiveCfg = Release|Any CPU
 		{F5D46BA1-6F21-40EF-9695-46105CCACD08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F5D46BA1-6F21-40EF-9695-46105CCACD08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5D46BA1-6F21-40EF-9695-46105CCACD08}.Debug|Mixed Platforms.ActiveCfg = Debug|x86

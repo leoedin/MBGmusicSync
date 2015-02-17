@@ -70,6 +70,10 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Json.NET\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -80,14 +84,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GMusicSyncData.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="MbSyncData.cs" />
+    <Compile Include="Models\GMusicPlaylist.cs" />
+    <Compile Include="Models\GMusicPlaylistEntry.cs" />
+    <Compile Include="Models\GMusicPlaylists.cs" />
+    <Compile Include="Models\GMusicSerialisationModels.cs" />
+    <Compile Include="Models\GMusicSong.cs" />
+    <Compile Include="Models\GMusicSongs.cs" />
+    <Compile Include="Models\MbPlaylist.cs" />
+    <Compile Include="Models\MbSong.cs" />
+    <Compile Include="PlaylistSync.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Configure.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Configure.Designer.cs">
       <DependentUpon>Configure.cs</DependentUpon>
     </Compile>
+    <Compile Include="GMusicAPI\API.cs" />
+    <Compile Include="GMusicAPI\GoogleHTTP.cs" />
     <Compile Include="MusicBeeInterface.cs" />
-    <Compile Include="PlaylistSync.cs" />
+    <Compile Include="MBGmusicPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -114,12 +133,6 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GMusicAPI\GMusicAPI.csproj">
-      <Project>{7CB6C040-ECBA-451F-8426-ECC4F59CF7CC}</Project>
-      <Name>GMusicAPI</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Configure.resx">

@@ -6,7 +6,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using GMusicAPI;
+using MusicBeePlugin;
+using MusicBeePlugin.GMusicAPI;
+using MusicBeePlugin.Models;
 
 namespace TestGMusicAPI
 {
@@ -24,6 +26,14 @@ namespace TestGMusicAPI
         private void loginButton_Click(object sender, EventArgs e)
         {
             string[] credentials = System.IO.File.ReadAllLines("C:\\\\Temp\\gmusic.txt");
+            api.OnLoginComplete = new EventHandler(delegate(object send2, EventArgs ee)
+            {
+                this.Invoke(new MethodInvoker(delegate
+                {
+                    this.statusLabel.Text = String.Format("Login complete, auth: {0}", api.AuthToken);
+                }));
+
+            });
             api.Login(credentials[0], credentials[1]);
         }
 
@@ -49,10 +59,10 @@ namespace TestGMusicAPI
 
         #region Get playlists
         // Get all the playlists tied to this account and display them
-        // TODO: Filter for deleted
+
         private void getPlaylistsButton_Click(object sender, EventArgs e)
         {
-            api.OnGetAllPlaylistSongsComplete = OnGetAllPlaylistSongs;
+            api.OnGetAllPlaylistsComplete = OnGetAllPlaylistSongs;
             api.GetAllPlaylists();
         }
 

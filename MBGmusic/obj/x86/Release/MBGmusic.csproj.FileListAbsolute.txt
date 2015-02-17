@@ -1,14 +1,10 @@
 C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\x86\Release\mb_GoogleMusicSync.dll.config
 C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\x86\Release\mb_GoogleMusicSync.dll
 C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\x86\Release\mb_GoogleMusicSync.pdb
-C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\x86\Release\GMusicAPI.dll
 C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\x86\Release\Newtonsoft.Json.dll
-C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\x86\Release\GMusicAPI.pdb
 C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\x86\Release\Newtonsoft.Json.pdb
 C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\bin\x86\Release\Newtonsoft.Json.xml
-C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\obj\x86\Release\ResolveAssemblyReference.cache
 C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\obj\x86\Release\MusicBeePlugin.Configure.resources
-C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\obj\x86\Release\GenerateResource.read.1.tlog
-C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\obj\x86\Release\GenerateResource.write.1.tlog
+C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\obj\x86\Release\MBGMusic.csproj.GenerateResource.Cache
 C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\obj\x86\Release\mb_GoogleMusicSync.dll
 C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\MBGmusic\obj\x86\Release\mb_GoogleMusicSync.pdb

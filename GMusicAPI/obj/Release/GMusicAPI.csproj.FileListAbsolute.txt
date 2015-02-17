@@ -3,6 +3,6 @@ C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\GMusicAPI\bin\Re
 C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\GMusicAPI\bin\Release\Newtonsoft.Json.dll
 C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\GMusicAPI\bin\Release\Newtonsoft.Json.pdb
 C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\GMusicAPI\bin\Release\Newtonsoft.Json.xml
-C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\GMusicAPI\obj\Release\ResolveAssemblyReference.cache
 C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\GMusicAPI\obj\Release\GMusicAPI.dll
 C:\Users\Leo\Documents\Visual Studio 2010\Projects\MBGmusicSync\GMusicAPI\obj\Release\GMusicAPI.pdb
+C:\Users\Leo\documents\visual studio 2010\Projects\MBGmusicSync\GMusicAPI\obj\Release\GMusicAPI.csprojResolveAssemblyReference.cache
