@@ -271,6 +271,8 @@ namespace MusicBeePlugin
             this.Close();
         }
 
+        //SelectedIndexChanged NOT CheckedItemsChanged because the latter is called before the CheckedItems collection has actually updated,
+        // making our eventual list miss the most recently selected item...
         private void localPlaylistBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             saveLocalPlaylistSettings();

@@ -13,7 +13,7 @@ Plugin
 
 ### Installation
 
-To just use the plugin, download the built DLLs in the MBGmusic project. All 3 DLLs are needed to function.
+To just use the plugin, download the built DLLs from the "Plugin" directory. Place both included DLLs into the MusicBee\\Plugins directory
 
 ### Usage
 
