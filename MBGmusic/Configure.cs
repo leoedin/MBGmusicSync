@@ -46,6 +46,7 @@ namespace MusicBeePlugin
             _playlistSync.GMusic.OnLoginComplete = new EventHandler(GMusic_OnLoginComplete);
             _playlistSync.GMusic.OnFetchDataComplete = new EventHandler(GMusic_OnFetchDataComplete);
             _playlistSync.GMusic.OnSyncComplete = new EventHandler(GMusic_OnSyncComplete);
+            _playlistSync.MBSync.OnSyncComplete = new EventHandler(MBSync_OnSyncComplete);
 
             if (_playlistSync.GMusic.SyncRunning)
             {
@@ -173,6 +174,7 @@ namespace MusicBeePlugin
         private void populateLocalPlaylists()
         {
             List<MbPlaylist> mbPlaylists = _playlistSync.MBSync.GetMbPlaylists();
+            localPlaylistBox.Items.Clear();
             foreach (MbPlaylist mbPlaylist in mbPlaylists)
             {
                 if (_settings.MBPlaylistsToSync.Contains(mbPlaylist.mbName))

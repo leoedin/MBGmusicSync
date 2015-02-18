@@ -15,7 +15,7 @@ namespace MusicBeePlugin
 
         private Plugin.MusicBeeApiInterface _mbApiInterface;
 
-        public event EventHandler OnSyncComplete;
+        public EventHandler OnSyncComplete;
 
         public MbSyncData(Settings settings, Plugin.MusicBeeApiInterface mbApiInterface)
         {
@@ -85,18 +85,19 @@ namespace MusicBeePlugin
         // Create a new playlist with the GMusic playlist contents
         public void SyncPlaylistsToMusicBee(List<GMusicPlaylist> playlists, List<GMusicSong> allGMusicSongs)
         {
-            List<MbPlaylist> localPlaylists = GetMbPlaylists();
+            
             // The API doesn't give us a directory for playlists, 
             // We need to guess by finding the root directory of the first playlist
+            /* Apparently playlistDir = "" is "root" playlist dir, so this is unneeded.
             MbPlaylist useForDir = localPlaylists.First();
             String playlistDir = new FileInfo(useForDir.mbName).DirectoryName;
             if (useForDir.Name.Contains('\\'))
             {
                 String folder = useForDir.Name.Split('\\')[0];
                 playlistDir = playlistDir.Replace(folder, "");
-            }
+            }*/
 
-
+            List<MbPlaylist> localPlaylists = GetMbPlaylists();
             List<MbSong> allMbSongs = GetMbSongs();
 
             // Go through each playlist we want to sync in turn
@@ -143,7 +144,7 @@ namespace MusicBeePlugin
                 else
                 {
                     // Create the playlist
-                    _mbApiInterface.Playlist_CreatePlaylist(playlistDir, playlist.Name, mbPlaylistSongFiles);
+                    _mbApiInterface.Playlist_CreatePlaylist(_settings.PlaylistDirectory, playlist.Name, mbPlaylistSongFiles);
                 }
             }
 

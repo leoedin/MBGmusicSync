@@ -41,7 +41,7 @@ namespace MusicBeePlugin
 
             // Process taken from tag tools
             //Lets try to read defaults for controls from settings file
-            string configFilePath = System.IO.Path.Combine(mbApiInterface.Setting_GetPersistentStoragePath(), "gmusicStream.Settings.xml");
+            string configFilePath = System.IO.Path.Combine(mbApiInterface.Setting_GetPersistentStoragePath(), "gMusicPlaylistSync.Settings.xml");
             _settings = Settings.ReadSettings(configFilePath);
 
             _playlistSync = new PlaylistSync(_settings, mbApiInterface);

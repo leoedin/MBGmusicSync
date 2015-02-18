@@ -20,6 +20,8 @@ namespace MusicBeePlugin
             SyncOnStartup = false;
             SyncLocalToRemote = true;
 
+            PlaylistDirectory = "GMusic";
+
             SettingsFile = filename;
            
         }
@@ -40,7 +42,7 @@ namespace MusicBeePlugin
         public Boolean SyncLocalToRemote { get; set; }
         public List<String> MBPlaylistsToSync { get; private set; }
         public List<String> GMusicPlaylistsToSync { get; private set; }
-
+        public String PlaylistDirectory { get; set; }
 
         public bool Save()
         {
