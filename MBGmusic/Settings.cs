@@ -79,9 +79,12 @@ namespace MusicBeePlugin
                 {
                     settings = (Settings)controlsDefaultsSerializer.Deserialize(file);
                 }
-                catch
+                catch (Exception e)
                 {
-                    throw;
+                    Logger.Instance.Log("ERROR: Couldn't read saved settings");
+                    Logger.Instance.DebugLog("ERROR: Couldn't read saved settings");
+                    Logger.Instance.DebugLog(e.Message);
+                    return new Settings(filename);
                 }
                 finally
                 {
@@ -110,7 +113,8 @@ namespace MusicBeePlugin
             }
             catch
             {
-                Logger.Instance.Log("ERROR: Couldn't read saved settings");
+                Logger.Instance.Log("ERROR: Couldn't save settings");
+                Logger.Instance.DebugLog("ERROR: Couldn't save settings");
             }
 
         }

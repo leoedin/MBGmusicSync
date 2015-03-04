@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace MusicBeePlugin
 {
@@ -26,7 +27,22 @@ namespace MusicBeePlugin
         private Logger()
         {
             _log = new List<Tuple<DateTime, String>>();
+            logToFile = false;
+        }
 
+        private String _logFile;
+        private bool logToFile;
+        public String LogFile
+        {
+            get
+            {
+                return _logFile;
+            }
+            set
+            {
+                _logFile = value;
+                logToFile = true;
+            }
         }
 
         
@@ -34,8 +50,21 @@ namespace MusicBeePlugin
         public void Log(string text)
         {
             _log.Add(new Tuple<DateTime, String>(DateTime.Now, text));
+            
             if (OnLogUpdated != null)
                 OnLogUpdated(this, new EventArgs());
+
+        }
+
+        public void DebugLog(string text)
+        {
+            if (logToFile)
+            {
+                using (StreamWriter w = File.AppendText(LogFile))
+                {
+                    w.WriteLine(text + "\r\n");
+                }
+            }
         }
 
         public List<Tuple<DateTime, String>> LogData { get { return _log; } }

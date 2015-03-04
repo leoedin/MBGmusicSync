@@ -30,19 +30,26 @@ namespace MusicBeePlugin
             about.TargetApplication = "None";   // current only applies to artwork, lyrics or instant messenger name that appears in the provider drop down selector or target Instant Messenger
             about.Type = PluginType.General;
             about.VersionMajor = 1;  // your plugin version
-            about.VersionMinor = 0;
+            about.VersionMinor = 6;
             about.Revision = 1;
             about.MinInterfaceVersion = MinInterfaceVersion;
             about.MinApiRevision = MinApiRevision;
             about.ReceiveNotifications = (ReceiveNotificationFlags.PlayerEvents | ReceiveNotificationFlags.TagEvents);
             about.ConfigurationPanelHeight = 0;   // not implemented yet: height in pixels that musicbee should reserve in a panel for config settings. When set, a handle to an empty panel will be passed to the Configure function
 
+            
+            // Comment this out to disable logging
+            Logger.Instance.LogFile = System.IO.Path.Combine(mbApiInterface.Setting_GetPersistentStoragePath(), "gMusicPlaylistSync.log.txt");
 
+            createMenu();
 
+            Logger.Instance.DebugLog("Getting settings");
             // Process taken from tag tools
             //Lets try to read defaults for controls from settings file
             string configFilePath = System.IO.Path.Combine(mbApiInterface.Setting_GetPersistentStoragePath(), "gMusicPlaylistSync.Settings.xml");
             _settings = Settings.ReadSettings(configFilePath);
+
+            Logger.Instance.DebugLog("Creating PlaylistSync object");
 
             _playlistSync = new PlaylistSync(_settings, mbApiInterface);
 
@@ -59,7 +66,20 @@ namespace MusicBeePlugin
             int backColor = mbApiInterface.Setting_GetSkinElementColour(SkinElement.SkinInputControl, ElementState.ElementStateDefault,
                                                                                ElementComponent.ComponentBackground);
             int foreColor = mbApiInterface.Setting_GetSkinElementColour(SkinElement.SkinInputControl, ElementState.ElementStateDefault,
-                                                                               ElementComponent.ComponentForeground);
+                                                                                ElementComponent.ComponentForeground);
+
+            return false;
+        }
+
+        private void createMenu()
+        {
+            Logger.Instance.DebugLog("Adding menu");
+            mbApiInterface.MB_AddMenuItem("mnuTools/Google Music Playlist Sync", "", onMenuItemClick);
+        }
+
+        private void onMenuItemClick(object sender, EventArgs e)
+        {
+            Logger.Instance.DebugLog("Opening config window");
             if (_configureForm != null)
             {
                 _configureForm.Dispose();
@@ -69,8 +89,6 @@ namespace MusicBeePlugin
             _configureForm = new Configure(_playlistSync, _settings);
 
             _configureForm.Show();
-
-            return true;
         }
 
         // called by MusicBee when the user clicks Apply or Save in the MusicBee Preferences screen.
@@ -85,7 +103,7 @@ namespace MusicBeePlugin
         {
         }
 
-
+        
 
         // uninstall this plugin - clean up any persisted files
         public void Uninstall()
