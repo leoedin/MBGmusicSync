@@ -144,7 +144,10 @@ namespace MusicBeePlugin
                 else
                 {
                     // Create the playlist
-                    _mbApiInterface.Playlist_CreatePlaylist(_settings.PlaylistDirectory, playlist.Name, mbPlaylistSongFiles);
+                    _mbApiInterface.Playlist_CreatePlaylist("", playlist.Name, mbPlaylistSongFiles);
+                    // I haven't been able to get a playlist to be created in a directory yet
+                    // For now, don't give that option
+                   // _mbApiInterface.Playlist_CreatePlaylist(_settings.PlaylistDirectory, playlist.Name, mbPlaylistSongFiles);
                 }
             }
 

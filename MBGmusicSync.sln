@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MBGMusic", "MBGmusic\MBGMus
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGMusicAPI", "TestGMusicAPI\TestGMusicAPI.csproj", "{D61BD1FC-DE73-40B5-91DF-D8E756FC752C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestMBApi", "TestPlaylistCreation\TestMBApi.csproj", "{4D303419-70E9-4989-933D-9BDF8CBA87CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,16 @@ Global
 		{D61BD1FC-DE73-40B5-91DF-D8E756FC752C}.Release|Mixed Platforms.Build.0 = Release|x86
 		{D61BD1FC-DE73-40B5-91DF-D8E756FC752C}.Release|x86.ActiveCfg = Release|x86
 		{D61BD1FC-DE73-40B5-91DF-D8E756FC752C}.Release|x86.Build.0 = Release|x86
+		{4D303419-70E9-4989-933D-9BDF8CBA87CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D303419-70E9-4989-933D-9BDF8CBA87CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D303419-70E9-4989-933D-9BDF8CBA87CA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{4D303419-70E9-4989-933D-9BDF8CBA87CA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{4D303419-70E9-4989-933D-9BDF8CBA87CA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4D303419-70E9-4989-933D-9BDF8CBA87CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D303419-70E9-4989-933D-9BDF8CBA87CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D303419-70E9-4989-933D-9BDF8CBA87CA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{4D303419-70E9-4989-933D-9BDF8CBA87CA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{4D303419-70E9-4989-933D-9BDF8CBA87CA}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

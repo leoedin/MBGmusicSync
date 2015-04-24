@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.IO;
 using System.Text;
+using TestPlaylistCreation;
 
 namespace MusicBeePlugin
 {
@@ -24,13 +25,13 @@ namespace MusicBeePlugin
             mbApiInterface = new MusicBeeApiInterface();
             mbApiInterface.Initialise(apiInterfacePtr);
             about.PluginInfoVersion = PluginInfoVersion;
-            about.Name = "Google Music Sync";
-            about.Description = "Sync your playlists to Google Play Music.";
+            about.Name = "MB Test API Plugin";
+            about.Description = "Quickly test API functionality";
             about.Author = "Leo Rampen";
             about.TargetApplication = "None";   // current only applies to artwork, lyrics or instant messenger name that appears in the provider drop down selector or target Instant Messenger
             about.Type = PluginType.General;
             about.VersionMajor = 1;  // your plugin version
-            about.VersionMinor = 7;
+            about.VersionMinor = 1;
             about.Revision = 1;
             about.MinInterfaceVersion = MinInterfaceVersion;
             about.MinApiRevision = MinApiRevision;
@@ -43,22 +44,10 @@ namespace MusicBeePlugin
 
             createMenu();
 
-            Logger.Instance.DebugLog("Getting settings");
-            // Process taken from tag tools
-            //Lets try to read defaults for controls from settings file
-            string configFilePath = System.IO.Path.Combine(mbApiInterface.Setting_GetPersistentStoragePath(), "gMusicPlaylistSync.Settings.xml");
-            _settings = Settings.ReadSettings(configFilePath);
-
-            Logger.Instance.DebugLog("Creating PlaylistSync object");
-
-            _playlistSync = new PlaylistSync(_settings, mbApiInterface);
-
             return about;
         }
 
-        private Settings _settings;
-        private PlaylistSync _playlistSync;
-        Configure _configureForm;
+        private TestWindow _testWindow; 
 
         public bool Configure(IntPtr panelHandle)
         {
@@ -73,29 +62,26 @@ namespace MusicBeePlugin
 
         private void createMenu()
         {
-            Logger.Instance.DebugLog("Adding menu");
-            mbApiInterface.MB_AddMenuItem("mnuTools/Google Music Playlist Sync", "", onMenuItemClick);
+            mbApiInterface.MB_AddMenuItem("mnuTools/Test MB API Plugin", "", onMenuItemClick);
         }
 
         private void onMenuItemClick(object sender, EventArgs e)
         {
-            Logger.Instance.DebugLog("Opening config window");
-            if (_configureForm != null)
+            if (_testWindow != null)
             {
-                _configureForm.Dispose();
-                _configureForm = null;
+                _testWindow.Dispose();
+                _testWindow = null;
             }
 
-            _configureForm = new Configure(_playlistSync, _settings);
+            _testWindow = new TestWindow(mbApiInterface);
 
-            _configureForm.Show();
+            _testWindow.Show();
         }
 
         // called by MusicBee when the user clicks Apply or Save in the MusicBee Preferences screen.
         // its up to you to figure out whether anything has changed and needs updating
         public void SaveSettings()
         {
-            _settings.Save();
         }
 
         // MusicBee is closing the plugin (plugin is being disabled by user or MusicBee is shutting down)
@@ -108,7 +94,6 @@ namespace MusicBeePlugin
         // uninstall this plugin - clean up any persisted files
         public void Uninstall()
         {
-            _settings.Delete();
         }
 
 

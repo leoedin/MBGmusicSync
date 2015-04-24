@@ -24,7 +24,6 @@ namespace MusicBeePlugin
 
             _settings = settings;
 
-            _loggedIn = false;
             _syncRunning = false;
             
             log = Logger.Instance;
@@ -50,7 +49,6 @@ namespace MusicBeePlugin
         private Boolean _dataFetched;
         public Boolean DataFetched { get { return _dataFetched; } }
 
-        private Boolean _loggedIn;
         public Boolean LoggedIn { get { return (api.AuthToken != null && api.AuthToken != ""); } }
 
         #region Logging in
@@ -67,7 +65,6 @@ namespace MusicBeePlugin
                 api.Login(_settings.AuthorizationToken);
                 if (OnLoginComplete != null)
                     OnLoginComplete(this, new EventArgs());
-                _loggedIn = true;
                 FetchGMusicInformation();
             }
 
@@ -86,7 +83,6 @@ namespace MusicBeePlugin
             _settings.AuthorizationToken = api.AuthToken;
             _settings.Save();
 
-            _loggedIn = true;
             if (OnLoginComplete != null)
                 OnLoginComplete(this, e);
             FetchGMusicInformation();

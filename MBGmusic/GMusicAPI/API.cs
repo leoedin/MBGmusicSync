@@ -210,11 +210,20 @@ namespace MusicBeePlugin.GMusicAPI
             }
             catch (Exception e)
             {
+                // When a user has no playlists at all (none deleted), it's not calling OnGetAllPlaylistsComplete()
+                // As it should
+                // So I've put this here to do that if the parsing fails
+                // Could have unintended consequences
+                // Unable to test because I have playlists (deleted) present
+
+                if (OnGetAllPlaylistsComplete != null)
+                    OnGetAllPlaylistsComplete(allPlaylists);
                 if (OnError != null)
                 {
                     OnError(e);
                     return;
                 }
+
             }
 
             if (playlistsReceived == null || playlistsReceived.Data == null)
