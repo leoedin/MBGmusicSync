@@ -103,7 +103,6 @@ namespace MusicBeePlugin
         {
         }
 
-        
 
         // uninstall this plugin - clean up any persisted files
         public void Uninstall()

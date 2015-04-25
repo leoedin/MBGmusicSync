@@ -68,7 +68,7 @@ namespace MusicBeePlugin
 
             rememberCheckbox.Checked = _settings.SaveCredentials;
 
-            autoSyncCheckbox.Checked = _settings.SyncOnStartup;
+           // autoSyncCheckbox.Checked = _settings.SyncOnStartup;
 
             populateLocalPlaylists();
 
@@ -96,7 +96,7 @@ namespace MusicBeePlugin
             {
                 this.closeButton.Enabled = true;
                 this.syncNowButton.Enabled = true;
-                this.autoSyncCheckbox.Enabled = true;
+                //this.autoSyncCheckbox.Enabled = true;
                 List<GMusicPlaylist> allPlaylists = _playlistSync.GMusic.AllPlaylists;
                 googleMusicPlaylistBox.Items.Clear();
                 foreach (GMusicPlaylist playlist in allPlaylists)
@@ -185,11 +185,12 @@ namespace MusicBeePlugin
 
         }
 
+        /*
         private void autoSyncCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             _settings.SyncOnStartup = autoSyncCheckbox.Checked;
             _settings.Save();
-        }
+        }*/
 
         // Depending on user settings, either start a local sync to remote, or start a remote sync to local
         private void syncNowButton_Click(object sender, EventArgs e)

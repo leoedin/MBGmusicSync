@@ -35,7 +35,6 @@
             this.passwordLabel = new System.Windows.Forms.Label();
             this.rememberCheckbox = new System.Windows.Forms.CheckBox();
             this.warnSaveLabel = new System.Windows.Forms.Label();
-            this.autoSyncCheckbox = new System.Windows.Forms.CheckBox();
             this.syncNowButton = new System.Windows.Forms.Button();
             this.loginStatusLabel = new System.Windows.Forms.Label();
             this.syncStatusLabel = new System.Windows.Forms.Label();
@@ -115,21 +114,10 @@
             this.warnSaveLabel.TabIndex = 6;
             this.warnSaveLabel.Text = "Stores login \r\ndetails in \r\nplain text!";
             // 
-            // autoSyncCheckbox
-            // 
-            this.autoSyncCheckbox.AutoSize = true;
-            this.autoSyncCheckbox.Location = new System.Drawing.Point(148, 553);
-            this.autoSyncCheckbox.Name = "autoSyncCheckbox";
-            this.autoSyncCheckbox.Size = new System.Drawing.Size(102, 17);
-            this.autoSyncCheckbox.TabIndex = 7;
-            this.autoSyncCheckbox.Text = "Sync on Startup";
-            this.autoSyncCheckbox.UseVisualStyleBackColor = true;
-            this.autoSyncCheckbox.CheckedChanged += new System.EventHandler(this.autoSyncCheckbox_CheckedChanged);
-            // 
             // syncNowButton
             // 
             this.syncNowButton.Enabled = false;
-            this.syncNowButton.Location = new System.Drawing.Point(148, 524);
+            this.syncNowButton.Location = new System.Drawing.Point(156, 524);
             this.syncNowButton.Name = "syncNowButton";
             this.syncNowButton.Size = new System.Drawing.Size(125, 23);
             this.syncNowButton.TabIndex = 8;
@@ -149,7 +137,7 @@
             // syncStatusLabel
             // 
             this.syncStatusLabel.AutoSize = true;
-            this.syncStatusLabel.Location = new System.Drawing.Point(305, 531);
+            this.syncStatusLabel.Location = new System.Drawing.Point(304, 529);
             this.syncStatusLabel.Name = "syncStatusLabel";
             this.syncStatusLabel.Size = new System.Drawing.Size(69, 13);
             this.syncStatusLabel.TabIndex = 10;
@@ -231,10 +219,10 @@
             this.toGMusicRadiobutton.Checked = true;
             this.toGMusicRadiobutton.Location = new System.Drawing.Point(12, 527);
             this.toGMusicRadiobutton.Name = "toGMusicRadiobutton";
-            this.toGMusicRadiobutton.Size = new System.Drawing.Size(106, 17);
+            this.toGMusicRadiobutton.Size = new System.Drawing.Size(118, 17);
             this.toGMusicRadiobutton.TabIndex = 18;
             this.toGMusicRadiobutton.TabStop = true;
-            this.toGMusicRadiobutton.Text = "To Google Music";
+            this.toGMusicRadiobutton.Text = "-> To Google Music";
             this.toGMusicRadiobutton.UseVisualStyleBackColor = true;
             this.toGMusicRadiobutton.CheckedChanged += new System.EventHandler(this.toGMusicRadiobutton_CheckedChanged);
             // 
@@ -243,9 +231,9 @@
             this.fromGMusicRadioButton.AutoSize = true;
             this.fromGMusicRadioButton.Location = new System.Drawing.Point(12, 550);
             this.fromGMusicRadioButton.Name = "fromGMusicRadioButton";
-            this.fromGMusicRadioButton.Size = new System.Drawing.Size(116, 17);
+            this.fromGMusicRadioButton.Size = new System.Drawing.Size(128, 17);
             this.fromGMusicRadioButton.TabIndex = 19;
-            this.fromGMusicRadioButton.Text = "From Google Music";
+            this.fromGMusicRadioButton.Text = "<- From Google Music";
             this.fromGMusicRadioButton.UseVisualStyleBackColor = true;
             this.fromGMusicRadioButton.CheckedChanged += new System.EventHandler(this.fromGMusicRadioButton_CheckedChanged);
             // 
@@ -286,7 +274,6 @@
             this.Controls.Add(this.closeButton);
             this.Controls.Add(this.loginStatusLabel);
             this.Controls.Add(this.syncNowButton);
-            this.Controls.Add(this.autoSyncCheckbox);
             this.Controls.Add(this.warnSaveLabel);
             this.Controls.Add(this.rememberCheckbox);
             this.Controls.Add(this.passwordLabel);
@@ -314,7 +301,6 @@
         private System.Windows.Forms.Label passwordLabel;
         private System.Windows.Forms.CheckBox rememberCheckbox;
         private System.Windows.Forms.Label warnSaveLabel;
-        private System.Windows.Forms.CheckBox autoSyncCheckbox;
         private System.Windows.Forms.Button syncNowButton;
         private System.Windows.Forms.Label loginStatusLabel;
         private System.Windows.Forms.Label syncStatusLabel;
