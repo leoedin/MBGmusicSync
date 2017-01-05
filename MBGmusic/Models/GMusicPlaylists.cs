@@ -13,7 +13,8 @@ namespace MusicBeePlugin.Models
         public GPlaylistData Data { get; set; }
         [DataMember(Name = "kind")]
         public string Kind { get; set; }
-
+        [DataMember(Name = "nextPageToken")]
+        public string NextPageToken { get; set; }
     }
 
 }

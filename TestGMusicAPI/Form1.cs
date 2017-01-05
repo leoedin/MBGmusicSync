@@ -18,6 +18,8 @@ namespace TestGMusicAPI
         private List<GMusicSong> AllSongs = new List<GMusicSong>();
 
         API api = new API();
+        APIOAuth apiOauth = new APIOAuth();
+
         public Form1()
         {
             InitializeComponent();
@@ -25,36 +27,20 @@ namespace TestGMusicAPI
 
         private void loginButton_Click(object sender, EventArgs e)
         {
-            string[] credentials = System.IO.File.ReadAllLines("C:\\\\Temp\\gmusic.txt");
-            api.OnLoginComplete = new EventHandler(delegate(object send2, EventArgs ee)
-            {
-                this.Invoke(new MethodInvoker(delegate
-                {
-                    this.statusLabel.Text = String.Format("Login complete, auth: {0}", api.AuthToken);
-                }));
+            bool loggedIn = apiOauth.Login(Secret.USERNAME, Secret.PASSWORD);
 
-            });
-            api.Login(credentials[0], credentials[1]);
+            this.statusLabel.Text = String.Format("Login Status: {0}", loggedIn);
         }
 
         private void getTracksButton_Click(object sender, EventArgs e)
         {
-            api.OnGetAllSongsComplete = OnGetSongsComplete;
-            api.GetAllSongs();
-        }
-
-        private void OnGetSongsComplete(List<GMusicSong> songs)
-        {
-            AllSongs = songs;
-            this.Invoke(new MethodInvoker(delegate
+            List<GMusicSong> library = apiOauth.GetLibrary(100);
+            foreach(GMusicSong song in library)
             {
-                foreach (GMusicSong song in songs)
-                {
-                    songListBox.Items.Add(song);
-                    
-                }
-                songTotalLabel.Text = "Total songs: " + Convert.ToString(songs.Count());
-            }));
+                songListBox.Items.Add(song);
+            }
+
+            songTotalLabel.Text = String.Format("Total songs: {0}", library.Count);
         }
 
         #region Get playlists
@@ -62,22 +48,12 @@ namespace TestGMusicAPI
 
         private void getPlaylistsButton_Click(object sender, EventArgs e)
         {
-            api.OnGetAllPlaylistsComplete = OnGetAllPlaylistSongs;
-            api.GetAllPlaylists();
-        }
-
-        private void OnGetAllPlaylistSongs(List<GMusicPlaylist> playlists)
-        {
+            List<GMusicPlaylist> playlists = apiOauth.GetPlaylists(2);
             AllPlaylists = playlists;
-            this.Invoke(new MethodInvoker(delegate
+            foreach (GMusicPlaylist playlist in playlists)
             {
-                int selectedPlaylist = playlistListBox.SelectedIndex;
-                playlistListBox.Items.Clear();
-                foreach (GMusicPlaylist playlist in playlists)
-                    if (!playlist.Deleted)
-                        playlistListBox.Items.Add(playlist);
-                playlistListBox.SelectedIndex = selectedPlaylist;
-            }));
+                playlistListBox.Items.Add(playlist);
+            }
         }
 
         #endregion
