@@ -43,9 +43,6 @@ namespace MusicBeePlugin
             _playlistSync = playlistSync;
 
             // Register event handlers
-            _playlistSync.GMusic.OnLoginComplete = new EventHandler(GMusic_OnLoginComplete);
-            _playlistSync.GMusic.OnFetchDataComplete = new EventHandler(GMusic_OnFetchDataComplete);
-            _playlistSync.GMusic.OnSyncComplete = new EventHandler(GMusic_OnSyncComplete);
             _playlistSync.MBSync.OnSyncComplete = new EventHandler(MBSync_OnSyncComplete);
 
             if (_playlistSync.GMusic.SyncRunning)
@@ -75,43 +72,6 @@ namespace MusicBeePlugin
             // tagToolsPlugin.mbForm.AddOwnedForm(this);
         }
 
-        void GMusic_OnLoginComplete(object sender, EventArgs e)
-        {
-            this.Invoke(new MethodInvoker(delegate
-            {
-                if (_playlistSync.GMusic.LoggedIn)
-                {
-                    updateLoginStatus("Successfully logged in.");
-                }
-                else
-                {
-                    this.loginStatusLabel.Text = "LOGIN FAILED. PLEASE TRY AGAIN";
-                }
-            }));
-        }
-
-        void GMusic_OnFetchDataComplete(object sender, EventArgs e)
-        {
-            this.Invoke(new MethodInvoker(delegate
-            {
-                this.closeButton.Enabled = true;
-                this.syncNowButton.Enabled = true;
-                //this.autoSyncCheckbox.Enabled = true;
-                List<GMusicPlaylist> allPlaylists = _playlistSync.GMusic.AllPlaylists;
-                googleMusicPlaylistBox.Items.Clear();
-                foreach (GMusicPlaylist playlist in allPlaylists)
-                {
-                    if (!playlist.Deleted)
-                    {
-                        if (_settings.GMusicPlaylistsToSync.Contains(playlist.ID))
-                            googleMusicPlaylistBox.Items.Add(playlist, true);
-                        else
-                            googleMusicPlaylistBox.Items.Add(playlist, false);
-                    }
-                }
-            }));
-        }
-
         void MBSync_OnSyncComplete(object sender, EventArgs e)
         {
             this.Invoke(new MethodInvoker(delegate
@@ -129,7 +89,7 @@ namespace MusicBeePlugin
                 syncStatusLabel.Text = "Synchronisation done!";
                 closeButton.Enabled = false;
                 // Just refresh the playlists (don't bother fetching all the songs again)
-                _playlistSync.GMusic.UpdatePlaylists();
+                _playlistSync.GMusic.FetchPlaylists();
             }));
         }
 
@@ -141,7 +101,7 @@ namespace MusicBeePlugin
             }));
         }
 
-        private void loginButton_Click(object sender, EventArgs e)
+        private async void loginButton_Click(object sender, EventArgs e)
         {
             // Save the pwd and email to disc
             // NOTE although this encodes them as base64 (so they're not immediately obvious to anyone reading them) this is
@@ -163,9 +123,33 @@ namespace MusicBeePlugin
                 _settings.Save();
             }
 
-            _playlistSync.GMusic.LoginToGMusic(emailTextBox.Text, passwordTextBox.Text);
+            bool loggedIn = await _playlistSync.GMusic.LoginToGMusic(emailTextBox.Text, passwordTextBox.Text);
 
-            closeButton.Enabled = false;
+            if (loggedIn)
+            {
+                updateLoginStatus("Successfully logged in.");
+            }
+            else
+            {
+                updateLoginStatus("LOGIN FAILED. PLEASE TRY AGAIN");
+            }
+
+            this.closeButton.Enabled = true;
+            this.syncNowButton.Enabled = true;
+            //this.autoSyncCheckbox.Enabled = true;
+            List<GMusicPlaylist> allPlaylists = await _playlistSync.GMusic.FetchPlaylists();
+            googleMusicPlaylistBox.Items.Clear();
+            foreach (GMusicPlaylist playlist in allPlaylists)
+            {
+                if (!playlist.Deleted)
+                {
+                    if (_settings.GMusicPlaylistsToSync.Contains(playlist.ID))
+                        googleMusicPlaylistBox.Items.Add(playlist, true);
+                    else
+                        googleMusicPlaylistBox.Items.Add(playlist, false);
+                }
+            }
+
 
         }
 
@@ -193,7 +177,7 @@ namespace MusicBeePlugin
         }*/
 
         // Depending on user settings, either start a local sync to remote, or start a remote sync to local
-        private void syncNowButton_Click(object sender, EventArgs e)
+        private async void syncNowButton_Click(object sender, EventArgs e)
         {
             // Make sure we're logged in and have playlists, otherwise stop
             if (!_playlistSync.GMusic.LoggedIn)
@@ -211,7 +195,10 @@ namespace MusicBeePlugin
             closeButton.Enabled = false;
             updateSyncStatus("Now synchronising. Please wait.");
 
-            Task syncTask = Task.Factory.StartNew(() => _playlistSync.SyncPlaylists());
+
+            _playlistSync.SyncPlaylists();
+
+            updateSyncStatus("Done Synching.");
 
             //                List<GMusicPlaylist> selected = new List<GMusicPlaylist>();
             //foreach (GMusicPlaylist selectedPlaylist in googleMusicPlaylistBox.CheckedItems)
@@ -311,10 +298,6 @@ namespace MusicBeePlugin
         private void unsubscribeEvents()
         {
             log.OnLogUpdated = null;
-
-            _playlistSync.GMusic.OnLoginComplete = null;
-            _playlistSync.GMusic.OnFetchDataComplete = null;
-            _playlistSync.GMusic.OnSyncComplete = null;
 
         }
 

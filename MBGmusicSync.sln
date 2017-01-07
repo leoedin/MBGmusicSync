@@ -1,11 +1,26 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MBGMusic", "MBGmusic\MBGMusic.csproj", "{F5D46BA1-6F21-40EF-9695-46105CCACD08}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGMusicAPI", "TestGMusicAPI\TestGMusicAPI.csproj", "{D61BD1FC-DE73-40B5-91DF-D8E756FC752C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestMBApi", "TestPlaylistCreation\TestMBApi.csproj", "{4D303419-70E9-4989-933D-9BDF8CBA87CA}"
+EndProject
+Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "MusicBee", "..\..\..\Program Files (x86)\MusicBee\MusicBee.exe", "{DD3C2606-CAD7-4FD2-A53D-DD54F2200E1B}"
+	ProjectSection(DebuggerProjectSystem) = preProject
+		PortSupplier = 00000000-0000-0000-0000-000000000000
+		Executable = C:\Program Files (x86)\MusicBee\MusicBee.exe
+		RemoteMachine = MH-BOXBOX
+		StartingDirectory = C:\Program Files (x86)\MusicBee
+		Environment = Default
+		LaunchingEngine = 00000000-0000-0000-0000-000000000000
+		UseLegacyDebugEngines = No
+		LaunchSQLEngine = No
+		AttachLaunchAction = No
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +64,12 @@ Global
 		{4D303419-70E9-4989-933D-9BDF8CBA87CA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{4D303419-70E9-4989-933D-9BDF8CBA87CA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{4D303419-70E9-4989-933D-9BDF8CBA87CA}.Release|x86.ActiveCfg = Release|Any CPU
+		{DD3C2606-CAD7-4FD2-A53D-DD54F2200E1B}.Debug|Any CPU.ActiveCfg = Release|x86
+		{DD3C2606-CAD7-4FD2-A53D-DD54F2200E1B}.Debug|Mixed Platforms.ActiveCfg = Release|x86
+		{DD3C2606-CAD7-4FD2-A53D-DD54F2200E1B}.Debug|x86.ActiveCfg = Release|x86
+		{DD3C2606-CAD7-4FD2-A53D-DD54F2200E1B}.Release|Any CPU.ActiveCfg = Release|x86
+		{DD3C2606-CAD7-4FD2-A53D-DD54F2200E1B}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{DD3C2606-CAD7-4FD2-A53D-DD54F2200E1B}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

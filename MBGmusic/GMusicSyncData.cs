@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using MusicBeePlugin.GMusicAPI;
 using MusicBeePlugin.Models;
-
+using System.Threading.Tasks;
 
 namespace MusicBeePlugin
 {
@@ -31,10 +31,6 @@ namespace MusicBeePlugin
             _mbApiInterface = mbApiInterface;
         }
 
-        public EventHandler OnLoginComplete;
-        public EventHandler OnFetchDataComplete;
-        public EventHandler OnSyncComplete;
-
         private List<GMusicPlaylist> _allPlaylists;
         public List<GMusicPlaylist> AllPlaylists { get { return _allPlaylists; } }
 
@@ -49,43 +45,15 @@ namespace MusicBeePlugin
         private Boolean _dataFetched;
         public Boolean DataFetched { get { return _dataFetched; } }
 
-        public Boolean LoggedIn { get { return (api.AuthToken != null && api.AuthToken != ""); } }
+        public Boolean LoggedIn { get { return api.LoggedIn(); } }
 
         #region Logging in
 
-        public void LoginToGMusic(string email, string password)
+        public async Task<bool> LoginToGMusic(string email, string password)
         {
-
-            // The GoogleMusicAPI comes from GoogleMusicAPI.NET
-            // https://github.com/taylorfinnell/GoogleMusicAPI.NET/
-            //login to GMusic
-
-            if (_settings.AuthorizationToken != null && _settings.AuthorizationToken != "")
-            {
-                api.Login(_settings.AuthorizationToken);
-                if (OnLoginComplete != null)
-                    OnLoginComplete(this, new EventArgs());
-                FetchGMusicInformation();
-            }
-
-            else
-            {
-                api.OnLoginComplete = new EventHandler(LoginComplete);
-                api.Login(email, password);
-            }
-
-            // If neither is true, then we do nothing
-
-        }
-
-        private void LoginComplete(object sender, EventArgs e)
-        {
-            _settings.AuthorizationToken = api.AuthToken;
-            _settings.Save();
-
-            if (OnLoginComplete != null)
-                OnLoginComplete(this, e);
-            FetchGMusicInformation();
+            bool result = await api.LoginAsync(email, password);
+            FetchLibraryAndPlaylists();
+            return result;
         }
 
         #endregion
@@ -93,38 +61,25 @@ namespace MusicBeePlugin
         #region Fetch GMusic Information
 
         // The global-ish stuff we need to sync with Google Music
-        private API api = new API();
+        private APIOAuth api = new APIOAuth();
 
-        public void FetchGMusicInformation()
+        public async void FetchLibraryAndPlaylists()
         {
-            _syncRunning = true;
-            api.OnGetAllSongsComplete = onGetAllSongs;
-            api.GetAllSongs();
-        }
-
-        private void onGetAllSongs(List<GMusicSong> songs)
-        {
-            
-            _allSongs = songs;
-            UpdatePlaylists();
-        }
-
-        // Just update the playlists
-        public void UpdatePlaylists()
-        {
-            _syncRunning = true;
-            api.OnGetAllPlaylistsComplete = onGetAllPlaylists;
-            api.GetAllPlaylists();
-        }
-
-        private void onGetAllPlaylists(List<GMusicPlaylist> playlists)
-        {
-            _allPlaylists = playlists;
-            _syncRunning = false;
+            _allSongs = await api.GetLibraryAsync();
+            _allPlaylists = await api.GetPlaylistsWithEntriesAsync();
             _dataFetched = true;
+        }
 
-            if (OnFetchDataComplete != null)
-               OnFetchDataComplete(this, new EventArgs());
+        public async Task<List<GMusicSong>> FetchLibrary()
+        {
+            _allSongs = await api.GetLibraryAsync();
+            return _allSongs;
+        }
+
+        public async Task<List<GMusicPlaylist>> FetchPlaylists()
+        {
+            _allPlaylists = await api.GetPlaylistsWithEntriesAsync();
+            return _allPlaylists;
         }
 
         #endregion
@@ -132,11 +87,10 @@ namespace MusicBeePlugin
         #region Sync to GMusic
 
         // Synchronise the playlists defined in the settings file to Google Music
-        public void SyncPlaylistsToGMusic(List<MbPlaylist> mbPlaylistsToSync)
+        public async void SyncPlaylistsToGMusic(List<MbPlaylist> mbPlaylistsToSync)
         {
             _syncRunning = true;
             AutoResetEvent waitForEvent = new AutoResetEvent(false);
-
 
             if (_dataFetched)
             {
@@ -152,38 +106,23 @@ namespace MusicBeePlugin
                     if (thisPlaylist != null)
                     {
                         List<GMusicPlaylistEntry> allPlsSongs = thisPlaylist.Songs;
-                        // This simply signals the wait handle when done
-                        api.OnDeleteFromPlaylistComplete = delegate(MutatePlaylistResponse response)
-                        {
-                            waitForEvent.Set();
-                        };
-                        api.DeleteFromPlaylist(allPlsSongs);
 
-                        // Wait until the deletion is done
-                        waitForEvent.WaitOne();
+                        if (allPlsSongs.Count > 0)
+                        {
+                            MutatePlaylistResponse response = await api.RemoveFromPlaylistAsync(allPlsSongs);
+                        }
                         thisPlaylistID = thisPlaylist.ID;
                     }
                     else
                     {
-                        // Set the callback
-                        api.OnCreatePlaylistComplete = delegate(MutateResponse response)
-                        {
-                            thisPlaylistID = response.ID;
-                            waitForEvent.Set();
-                        };
-                        // Create the playlist
-                        api.CreatePlaylist(playlist.Name);
-                        // Wait until creation is done
-                        waitForEvent.WaitOne();
+                        MutatePlaylistResponse response = await api.CreatePlaylistAsync(playlist.Name);
+                        thisPlaylistID = response.MutateResponses.First().ID;
                     }
 
                     // Create a list of files based on the MB Playlist
                     string[] playlistFiles = null;
                     if (_mbApiInterface.Playlist_QueryFiles(playlist.mbName))
                     {
-                        // Old method:
-                        //  playlistFiles = _mbApiInterface.Playlist_QueryGetAllFiles().Split(filesSeparators, StringSplitOptions.RemoveEmptyEntries);
-
                         bool success = _mbApiInterface.Playlist_QueryFilesEx(playlist.mbName, ref playlistFiles);
                         if (!success)
                             throw new Exception("Couldn't get playlist files");
@@ -204,19 +143,10 @@ namespace MusicBeePlugin
                             songsToAdd.Add(gSong);
                     }
 
-                    api.OnAddToPlaylistComplete = delegate(MutatePlaylistResponse response)
-                    {
-                        waitForEvent.Set();
-                    };
-                    api.AddToPlaylist(thisPlaylistID, songsToAdd);
-                    waitForEvent.WaitOne();
-
+                    await api.AddToPlaylistAsync(thisPlaylistID, songsToAdd);
                 }
 
                 _syncRunning = false;
-                // Signal to anyone calling that we're done
-                if (OnSyncComplete != null)
-                    OnSyncComplete(this, new EventArgs());
 
             }
             else

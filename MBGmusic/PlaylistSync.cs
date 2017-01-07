@@ -37,7 +37,7 @@ namespace MusicBeePlugin
         /// <summary>
         /// This is blocking, so run it on a thread
         /// </summary>
-        public void SyncPlaylists()
+        public async void SyncPlaylists()
         {
             if (!_gMusic.LoggedIn || _gMusic.SyncRunning)
                 return;

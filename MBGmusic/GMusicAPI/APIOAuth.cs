@@ -41,6 +41,15 @@ namespace MusicBeePlugin.GMusicAPI
             gpsoauth = new GPSOAuth();
         }
 
+        #region Public Helper functions
+
+        public Boolean LoggedIn()
+        {
+            return !String.IsNullOrEmpty(gpsoauth.OAuthToken);
+        }
+
+        #endregion
+
         #region Async API functions
         /// <summary>
         /// Log in to Google Play Music using OAuth
@@ -225,7 +234,7 @@ namespace MusicBeePlugin.GMusicAPI
         /// <param name="description">Description of the playlist to be created</param>
         /// <param name="shareState">If the playlist will be PUBLIC or PRIVATE</param>
         /// <returns></returns>
-        public async Task<MutateResponse> CreatePlaylistAsync(string name, string description = null, ShareState shareState = ShareState.PRIVATE)
+        public async Task<MutatePlaylistResponse> CreatePlaylistAsync(string name, string description = null, ShareState shareState = ShareState.PRIVATE)
         {
             JObject requestData = new JObject()
             { { "mutations" , new JArray()
@@ -244,7 +253,7 @@ namespace MusicBeePlugin.GMusicAPI
                 }
             } };
 
-            return await PerformMutateRequest(requestData);
+            return await PerformMutatePlaylistRequest(SJ_URL_PLAYLISTS_BATCH, requestData);
         }
 
         /// <summary>
@@ -261,7 +270,7 @@ namespace MusicBeePlugin.GMusicAPI
                 }
             } };
 
-            return await PerformMutateRequest(requestData);
+            return await PerformMutateRequest(SJ_URL_PLAYLISTS_BATCH, requestData);
         }
 
         /// <summary>
@@ -288,7 +297,7 @@ namespace MusicBeePlugin.GMusicAPI
                 }
             } };
 
-            return await PerformMutateRequest(requestData);
+            return await PerformMutateRequest(SJ_URL_PLAYLISTS_BATCH, requestData);
         }
 
         /// <summary>
@@ -344,7 +353,7 @@ namespace MusicBeePlugin.GMusicAPI
                  "mutations", songsToAdd
              }};
 
-            return await PerformMutatePlaylistRequest(requestData);
+            return await PerformMutatePlaylistRequest(SJ_URL_PLAYLIST_ENTRIES_BATCH, requestData);
         }
 
         /// <summary>
@@ -368,23 +377,23 @@ namespace MusicBeePlugin.GMusicAPI
                  "mutations", songsToDelete
              }};
 
-            return await PerformMutatePlaylistRequest(requestData);
+            return await PerformMutatePlaylistRequest(SJ_URL_PLAYLIST_ENTRIES_BATCH, requestData);
         }
 
         #endregion
 
         #region Helper Functions
 
-        private async Task<MutatePlaylistResponse> PerformMutatePlaylistRequest(JObject data)
+        private async Task<MutatePlaylistResponse> PerformMutatePlaylistRequest(string url, JObject data)
         {
-            string responseAsJson = await SendPostAsync(SJ_URL_PLAYLIST_ENTRIES_BATCH, data);
+            string responseAsJson = await SendPostAsync(url, data);
             MutatePlaylistResponse response = JsonConvert.DeserializeObject<MutatePlaylistResponse>(responseAsJson);
             return response;
         }
 
-        private async Task<MutateResponse> PerformMutateRequest(JObject data)
+        private async Task<MutateResponse> PerformMutateRequest(string url, JObject data)
         {
-            string responseAsJson = await SendPostAsync(SJ_URL_PLAYLISTS_BATCH, data);
+            string responseAsJson = await SendPostAsync(url, data);
             MutateResponse response = JsonConvert.DeserializeObject<MutateResponse>(responseAsJson);
             return response;
         }
