@@ -22,6 +22,13 @@ namespace MusicBeePlugin.Models
     }
 
     [DataContract]
+    public class GPlaylistEntryData
+    {
+        [DataMember(Name = "items")]
+        public List<GMusicPlaylistEntry> AllPlaylistEntries { get; set; }
+    }
+
+    [DataContract]
     public class MutateResponse
     {
         [DataMember(Name = "id")]

@@ -79,8 +79,6 @@ namespace MusicBeePlugin.GMusicAPI
             string parameters = "service=sj&Email=" + email + "&Passwd=" + password;
             byte[] data = Encoding.UTF8.GetBytes(parameters);
             client.UploadDataAsync(new Uri("https://www.google.com/accounts/ClientLogin"), data, GetAuthTokenComplete);
-
-
         }
 
         // If we've got a saved auth token then use that

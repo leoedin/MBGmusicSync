@@ -1,5 +1,7 @@
-﻿using MusicBeePlugin.Models;
+﻿using Mono.Web;
+using MusicBeePlugin.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,52 +17,29 @@ namespace MusicBeePlugin.GMusicAPI
     {
         private GPSOAuth gpsoauth;
 
+        // old client id 565126123933-f27ojtmm7veeb51f8floos7s9vk80i5k
+        // Client id from gmusicapi
         private static string ClientId = "565126123933-f27ojtmm7veeb51f8floos7s9vk80i5k";
 
-        private string SJ_URL = "https://mclients.googleapis.com/sj/v1.11/";
-        private string SJ_URL_TRACKS = "https://mclients.googleapis.com/sj/v1.11/trackfeed";
-        private string STREAM_URL = "https://android.clients.google.com/music/mplay";
-        private string SJ_URL_PLAYLISTS = "https://mclients.googleapis.com/sj/v1.11/playlistfeed";
+        private static string SJ_URL = "https://mclients.googleapis.com/sj/v2.5/";
+        private static string SJ_URL_TRACKS = "https://mclients.googleapis.com/sj/v2.5/trackfeed";
+        private static string STREAM_URL = "https://android.clients.google.com/music/mplay";
+        private static string SJ_STREAM_URL = "https://mclients.googleapis.com/music/";
+        private static string SJ_URL_PLAYLISTS_FEED = "https://mclients.googleapis.com/sj/v2.5/playlistfeed";
+        private static string SJ_URL_PLAYLISTS_BATCH = "https://mclients.googleapis.com/sj/v2.5/playlistbatch";
+        private static string SJ_URL_PLAYLISTS_ENTRY_FEED = "https://mclients.googleapis.com/sj/v2.5/plentryfeed";
+        private static string SJ_URL_PLAYLIST_ENTRIES_BATCH = "https://mclients.googleapis.com/sj/v2.5/plentriesbatch";
+
+        private static string BASE_URL = "https://play.google.com/music/";
+        private static string SERVICE_URL = BASE_URL + "services/";
+        private static string CREATE_PLAYLIST_SERVICE_URL= SERVICE_URL + "createplaylist";
+
+        public enum ShareState { PUBLIC, PRIVATE}
 
         public APIOAuth()
         {
             gpsoauth = new GPSOAuth();
         }
-
-        #region Sync API functions
-
-        public bool Login(string email, string password)
-        {
-            bool loggedIn = false;
-            Task.Run(async () =>
-            {
-                loggedIn = await LoginAsync(email, password);
-            }).Wait();
-            return loggedIn;
-        }
-
-        public List<GMusicSong> GetLibrary(int tracksToGet = 0)
-        {
-            List<GMusicSong> lib = new List<GMusicSong>();
-            Task.Run(async () =>
-            {
-                lib = await GetLibraryAsync(tracksToGet);
-            }).Wait();
-            return lib;
-        }
-
-        public List<GMusicPlaylist> GetPlaylists(int playlistsToGet = 0)
-        {
-            List<GMusicPlaylist> playlists = new List<GMusicPlaylist>();
-            Task.Run(async () =>
-            {
-                playlists = await GetPlaylistsAsync(playlistsToGet);
-            }).Wait();
-            return playlists;
-        }
-       
-
-        #endregion
 
         #region Async API functions
         /// <summary>
@@ -102,16 +81,17 @@ namespace MusicBeePlugin.GMusicAPI
         {
             List<GMusicSong> lib = new List<GMusicSong>();
             int totalTracks = 0;
-            string nextPageToken = "";
+            string nextPageToken = null;
             do
             {
-                List<KeyValuePair<string, string>> data = new List<KeyValuePair<string, string>>()
-                { new KeyValuePair<string, string>("max_results", "5000"),
-                    new KeyValuePair<string, string>("start_token", nextPageToken)};
+                JObject requestData = new JObject()
+                {
+                    { "max-results", "20000" },
+                    { "start_token", nextPageToken }
+                };
 
-
-                string responseAsJson = await SendPostAsync(SJ_URL_TRACKS, data);
-                GMusicSongs response = ParseTrackObjectsFromJsonList(responseAsJson);
+                string responseAsJson = await SendPostAsync(SJ_URL_TRACKS, requestData);
+                GMusicSongs response = JsonConvert.DeserializeObject<GMusicSongs>(responseAsJson);
                 lib.AddRange(response.Data.AllSongs);
                 totalTracks += response.Data.AllSongs.Count;
 
@@ -126,9 +106,12 @@ namespace MusicBeePlugin.GMusicAPI
                         return lib.Take(tracksToGet).ToList();
                     }
                 }
-
+                else
+                {
+                    nextPageToken = response.NextPageToken;
+                }
             }
-            while (nextPageToken != "");
+            while (nextPageToken != null);
 
             return lib;
         }
@@ -137,20 +120,22 @@ namespace MusicBeePlugin.GMusicAPI
         /// Gets all playlists
         /// </summary>
         /// <param name="playlistsToGet">Number of playlists to get, default is all of them</param>
-        /// <returns></returns>
+        /// <returns>List of all playlists in the library</returns>
         public async Task<List<GMusicPlaylist>> GetPlaylistsAsync(int playlistsToGet = 0)
         {
             List<GMusicPlaylist> playlists = new List<GMusicPlaylist>();
             int totalPlaylists = 0;
-            string nextPageToken = "";
+            string nextPageToken = null;
             do
             {
-                List<KeyValuePair<string, string>> data = new List<KeyValuePair<string, string>>()
-                { new KeyValuePair<string, string>("max_results", "5000"),
-                    new KeyValuePair<string, string>("start_token", nextPageToken)};
+                JObject requestData = new JObject()
+                {
+                    { "max-results", "20000" },
+                    { "start_token", nextPageToken }
+                };
 
-                string responseAsJson = await SendPostAsync(SJ_URL_PLAYLISTS, data);
-                GMusicPlaylists response = ParsePlaylistObjectFromJsonList(responseAsJson);
+                string responseAsJson = await SendPostAsync(SJ_URL_PLAYLISTS_FEED, requestData);
+                GMusicPlaylists response = JsonConvert.DeserializeObject<GMusicPlaylists>(responseAsJson);
                 playlists.AddRange(response.Data.AllPlaylists);
                 totalPlaylists += response.Data.AllPlaylists.Count;
                 if (playlistsToGet != 0)
@@ -164,18 +149,248 @@ namespace MusicBeePlugin.GMusicAPI
                         return playlists.Take(playlistsToGet).ToList();
                     }
                 }
+                else
+                {
+                    nextPageToken = response.NextPageToken;
+                }
+            } while (nextPageToken != null);
+
+            return playlists;
+        }
+
+        /// <summary>
+        /// Gets all playlist entries
+        /// </summary>
+        /// <param name="entriesToGet">Numer of playlist entries to get, default is all of them</param>
+        /// <returns></returns>
+        public async Task<List<GMusicPlaylistEntry>> GetPlaylistEntriesAsync(int entriesToGet = 0)
+        {
+            List<GMusicPlaylistEntry> playlists = new List<GMusicPlaylistEntry>();
+            int totalPlaylists = 0;
+            string nextPageToken = "";
+            do
+            {
+                JObject requestData = new JObject()
+                { { "data" , new JArray()
+                    { new JObject()
+                        {
+                            { "max_results", "5000" },
+                            {"start_token", nextPageToken }
+                        }
+                    }
+                } };
+
+                string responseAsJson = await SendPostAsync(SJ_URL_PLAYLISTS_ENTRY_FEED, requestData);
+                GMusicPlaylistEntryResponse response = JsonConvert.DeserializeObject<GMusicPlaylistEntryResponse>(responseAsJson);
+                playlists.AddRange(response.Data.AllPlaylistEntries);
+                totalPlaylists += response.Data.AllPlaylistEntries.Count;
+
+                if (entriesToGet != 0)
+                {
+                    if (totalPlaylists < entriesToGet)
+                    {
+                        nextPageToken = response.NextPageToken;
+                    }
+                    else
+                    {
+                        return playlists.Take(entriesToGet).ToList();
+                    }
+                }
             } while (nextPageToken != "");
 
             return playlists;
+        }
+      
+        /// <summary>
+        /// Gets all playlists and entries and matches the playlists.songs with the entries
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<GMusicPlaylist>> GetPlaylistsWithEntriesAsync()
+        {
+            List<GMusicPlaylist> playlists = await GetPlaylistsAsync();
+            List<GMusicPlaylistEntry> entries = await GetPlaylistEntriesAsync();
+
+            foreach (GMusicPlaylist playlist in playlists)
+            {
+                playlist.Songs = entries.Where(s => s.PlaylistID == playlist.ID).ToList();
+                playlist.Songs.OrderBy(s => s.AbsolutePosition);
+            }
+            return playlists;
+        }
+
+        /// <summary>
+        /// Creates a playlist
+        /// </summary>
+        /// <param name="name">Name of the playlist to be created</param>
+        /// <param name="description">Description of the playlist to be created</param>
+        /// <param name="shareState">If the playlist will be PUBLIC or PRIVATE</param>
+        /// <returns></returns>
+        public async Task<MutateResponse> CreatePlaylistAsync(string name, string description = null, ShareState shareState = ShareState.PRIVATE)
+        {
+            JObject requestData = new JObject()
+            { { "mutations" , new JArray()
+                { new JObject()
+                    { { "create" , new JObject()
+                        {
+                            {"name", name},
+                            {"deleted", false},
+                            {"creationTimestamp", "-1"},
+                            {"lastModifiedTimestamp","0"},
+                            {"type", "USER_GENERATED"},
+                            {"shareState", shareState == ShareState.PRIVATE ? "PRIVATE" : "PUBLIC" },
+                            {"description", description}
+                        }
+                    } }
+                }
+            } };
+
+            return await PerformMutateRequest(requestData);
+        }
+
+        /// <summary>
+        /// Deletes a playlist
+        /// </summary>
+        /// <param name="playlistId">ID of the playlist</param>
+        /// <returns></returns>
+        public async Task<MutateResponse> DeletePlaylistAsync(string playlistId)
+        {
+            JObject requestData = new JObject()
+            { { "mutations" , new JArray()
+                {
+                    new JObject() { { "delete", playlistId} }
+                }
+            } };
+
+            return await PerformMutateRequest(requestData);
+        }
+
+        /// <summary>
+        /// Renames a playlist
+        /// </summary>
+        /// <param name="playlistId">ID of the playlist to be modified</param>
+        /// <param name="name">New name for the playlist (or null to make no changes)</param>
+        /// <param name="description">New description for the playlist (or null to make no changes)</param>
+        /// <param name="shareState">New share state (PUBLIC or PRIVATE) (or null to make no changes)</param>
+        /// <returns></returns>
+        public async Task<MutateResponse> UpdatePlaylistAsync(string playlistId, string name, string description = null, ShareState? shareState = null)
+        {
+            JObject requestData = new JObject()
+            { { "mutations" , new JArray()
+                { new JObject()
+                    { { "update" , new JObject()
+                        {
+                            {"name", name},
+                            {"id", playlistId},
+                            {"description", description},
+                            {"sharestate", shareState == null ? null : shareState.ToString() }
+                        }
+                    } }
+                }
+            } };
+
+            return await PerformMutateRequest(requestData);
+        }
+
+        /// <summary>
+        /// Adds the provided songs to the playlist
+        /// </summary>
+        /// <param name="playlistId">ID of the playlist to add songs to</param>
+        /// <param name="songs">List of songs to add</param>
+        /// <returns></returns>
+        public async Task<MutatePlaylistResponse> AddToPlaylistAsync(string playlistId, List<GMusicSong> songs)
+        {
+            Guid prev_uid = Guid.NewGuid();
+            Guid current_uid = Guid.NewGuid();
+            Guid next_uid = Guid.NewGuid();
+
+            // This function is taken more or less completely from def build_plentry_adds() in
+            // the unofficial google music API
+            JArray songsToAdd = new JArray();
+
+            int i = 0;
+            foreach (GMusicSong song in songs)
+            {
+                JObject songJObject = new JObject
+                    {
+                    { "clientId", current_uid.ToString() },
+                    { "creationTimestamp", -1 },
+                    { "deleted", false },
+                    { "lastModifiedTimestamp", 0},
+                    { "playlistId", playlistId },
+                    { "source", 1 },
+                    {"trackId", song.ID }
+                    };
+
+                if (song.ID.First() == 'T')
+                    songJObject["source"] = 2;
+
+                if (i > 0)
+                    songJObject["precedingEntryId"] = prev_uid;
+
+                if (i < songs.Count - 1)
+                    songJObject["followingEntryId"] = next_uid;
+
+                JObject createJObject = new JObject { { "create", songJObject } };
+
+                songsToAdd.Add(createJObject);
+                prev_uid = current_uid;
+                current_uid = next_uid;
+                next_uid = Guid.NewGuid();
+                i++;
+            }
+
+            JObject requestData = new JObject
+            {{
+                 "mutations", songsToAdd
+             }};
+
+            return await PerformMutatePlaylistRequest(requestData);
+        }
+
+        /// <summary>
+        /// Removes the list of playlist entries from their playlist(s)
+        /// </summary>
+        /// <param name="songs">List of entries to remove</param>
+        /// <returns></returns>
+        public async Task<MutatePlaylistResponse> RemoveFromPlaylistAsync(List<GMusicPlaylistEntry> songs)
+        {
+            JArray songsToDelete = new JArray();
+            foreach (GMusicPlaylistEntry entry in songs)
+            {
+                songsToDelete.Add(new JObject
+                {
+                {"delete", entry.ID}
+                });
+            }
+
+            JObject requestData = new JObject
+            {{
+                 "mutations", songsToDelete
+             }};
+
+            return await PerformMutatePlaylistRequest(requestData);
         }
 
         #endregion
 
         #region Helper Functions
 
-        private async Task<string> SendPostAsync(string url, List<KeyValuePair<string, string>> data)
+        private async Task<MutatePlaylistResponse> PerformMutatePlaylistRequest(JObject data)
         {
+            string responseAsJson = await SendPostAsync(SJ_URL_PLAYLIST_ENTRIES_BATCH, data);
+            MutatePlaylistResponse response = JsonConvert.DeserializeObject<MutatePlaylistResponse>(responseAsJson);
+            return response;
+        }
 
+        private async Task<MutateResponse> PerformMutateRequest(JObject data)
+        {
+            string responseAsJson = await SendPostAsync(SJ_URL_PLAYLISTS_BATCH, data);
+            MutateResponse response = JsonConvert.DeserializeObject<MutateResponse>(responseAsJson);
+            return response;
+        }
+
+        private async Task<string> SendPostAsync(string url, JObject data)
+        {
             var client = new HttpClient();
 
             client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue
@@ -183,8 +398,17 @@ namespace MusicBeePlugin.GMusicAPI
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            string combinedUrl = url;//+ "?alt=json&include-tracks=true&updated-min=0";
-            string temp = KeyValuePairsToJson(data); // this string doesnt seem to affect the results...
+            var builder = new UriBuilder(url);
+            builder.Port = -1;
+            var query = HttpUtility.ParseQueryString(builder.Query);
+            query["alt"] = "json";
+            query["dv"] = "0";
+            query["hl"] = "en_US";
+            query["tier"] = "aa";
+            builder.Query = query.ToString();
+
+            string combinedUrl = builder.ToString();
+            string temp = data.ToString(); 
             HttpContent content = new StringContent(temp, System.Text.Encoding.UTF8, "application/json");
             var response = await client.PostAsync(combinedUrl, content);
             var responseString = await response.Content.ReadAsStringAsync();
@@ -200,36 +424,6 @@ namespace MusicBeePlugin.GMusicAPI
             var response = await client.GetAsync(url);
             var responseString = await response.Content.ReadAsStringAsync();
             return responseString;
-        }
-
-        private GMusicSongs ParseTrackObjectsFromJsonList(string json)
-        {
-            return JsonConvert.DeserializeObject<GMusicSongs>(json);
-        }
-
-        private GMusicPlaylists ParsePlaylistObjectFromJsonList(string json)
-        {
-            return JsonConvert.DeserializeObject<GMusicPlaylists>(json);
-        }
-
-        private string KeyValuePairsToJson(List<KeyValuePair<string, string>> list)
-        {
-            StringWriter sw = new StringWriter(new StringBuilder());
-            JsonWriter writer = new JsonTextWriter(sw);
-            writer.WriteStartObject();
-            writer.WritePropertyName("data");
-            writer.WriteStartArray();
-            foreach (KeyValuePair<string, string> item in list)
-            {
-                writer.WriteStartObject();
-                writer.WritePropertyName(item.Key);
-                writer.WriteValue(item.Value);
-                writer.WriteEndObject();
-            }
-            writer.WriteEndArray();
-            writer.WriteEndObject();
-
-            return sw.ToString();
         }
 
         #endregion
