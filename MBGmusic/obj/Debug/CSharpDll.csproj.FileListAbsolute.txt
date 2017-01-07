@@ -1,8 +1,0 @@
-C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\bin\Debug\mb_TestCSharpDll.dll.config
-C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\bin\Debug\mb_TestCSharpDll.dll
-C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\bin\Debug\mb_TestCSharpDll.pdb
-C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\obj\Debug\ResolveAssemblyReference.cache
-C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\obj\Debug\mb_TestCSharpDll.dll
-C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\obj\Debug\mb_TestCSharpDll.pdb
-C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\obj\Debug\Interop.WMPLib.dll
-C:\Users\Leo\Dropbox\Projects\MusicBee GMusic\obj\Debug\CSharpDll.csproj.ResolveComReference.cache
