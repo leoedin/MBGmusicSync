@@ -2,6 +2,8 @@ Fork of https://github.com/leoedin/MBGmusicSync
 
 The main change I am working on is modifying the Google Music API to use OAuth.
 
+The GPM client I am using is here https://github.com/mitchhymel/GooglePlayMusicAPI
+
 References
 ----------------------------------
 For most of this project so far, I am building off of leoedins work on [MBGmusicSync](https://github.com/leoedin/MBGmusicSync)
