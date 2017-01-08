@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MusicBeePlugin.Models;
-using MusicBeePlugin.GMusicAPI;
 using System.Threading;
+using GooglePlayMusicAPI;
 
 namespace MusicBeePlugin
 {
@@ -61,10 +61,10 @@ namespace MusicBeePlugin
             {
                 if (_gMusic.DataFetched)
                 {
-                    List<GMusicPlaylist> playlists = new List<GMusicPlaylist>();
+                    List<Playlist> playlists = new List<Playlist>();
                     foreach (string id in _settings.GMusicPlaylistsToSync)
                     {
-                        GMusicPlaylist pls = _gMusic.AllPlaylists.FirstOrDefault(p => p.ID == id);
+                        Playlist pls = _gMusic.AllPlaylists.FirstOrDefault(p => p.ID == id);
                         if (pls != null)
                             playlists.Add(pls);
                     }

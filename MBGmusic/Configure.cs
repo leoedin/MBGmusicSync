@@ -10,6 +10,7 @@ using System.IO;
 using System.Configuration;
 using MusicBeePlugin.Models;
 using System.Threading.Tasks;
+using GooglePlayMusicAPI;
 
 namespace MusicBeePlugin
 {
@@ -137,9 +138,9 @@ namespace MusicBeePlugin
             this.closeButton.Enabled = true;
             this.syncNowButton.Enabled = true;
             //this.autoSyncCheckbox.Enabled = true;
-            List<GMusicPlaylist> allPlaylists = await _playlistSync.GMusic.FetchPlaylists();
+            List<Playlist> allPlaylists = await _playlistSync.GMusic.FetchPlaylists();
             googleMusicPlaylistBox.Items.Clear();
-            foreach (GMusicPlaylist playlist in allPlaylists)
+            foreach (Playlist playlist in allPlaylists)
             {
                 if (!playlist.Deleted)
                 {
@@ -288,7 +289,7 @@ namespace MusicBeePlugin
         private void saveRemotePlaylistSettings()
         {
             _settings.GMusicPlaylistsToSync.Clear();
-            foreach (GMusicPlaylist playlist in googleMusicPlaylistBox.CheckedItems)
+            foreach (Playlist playlist in googleMusicPlaylistBox.CheckedItems)
             {
                 _settings.GMusicPlaylistsToSync.Add(playlist.ID);
             }

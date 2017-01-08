@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using MusicBeePlugin.Models;
 using System.IO;
+using GooglePlayMusicAPI;
 
 namespace MusicBeePlugin
 {
@@ -83,7 +84,7 @@ namespace MusicBeePlugin
         // Go through the selected playlists from GMusic,
         // delete the correspondingly named MusicBee playlist
         // Create a new playlist with the GMusic playlist contents
-        public void SyncPlaylistsToMusicBee(List<GMusicPlaylist> playlists, List<GMusicSong> allGMusicSongs)
+        public void SyncPlaylistsToMusicBee(List<Playlist> playlists, List<Track> allGMusicSongs)
         {
             
             // The API doesn't give us a directory for playlists, 
@@ -101,7 +102,7 @@ namespace MusicBeePlugin
             List<MbSong> allMbSongs = GetMbSongs();
 
             // Go through each playlist we want to sync in turn
-            foreach (GMusicPlaylist playlist in playlists)
+            foreach (Playlist playlist in playlists)
             {
                 // Create an empty list for this playlist's local songs
                 List<MbSong> mbPlaylistSongs = new List<MbSong>();
@@ -109,9 +110,9 @@ namespace MusicBeePlugin
                 // For each entry in the playlist we're syncing, get the song from the GMusic library we've downloaded,
                 // Get the song Title and Artist and then look it up in the list of local songs.
                 // If we find it, add it to the list of local songs
-                foreach (GMusicPlaylistEntry entry in playlist.Songs)
+                foreach (PlaylistEntry entry in playlist.Songs)
                 {
-                    GMusicSong thisSong = allGMusicSongs.FirstOrDefault(s => s.ID == entry.TrackID);
+                    Track thisSong = allGMusicSongs.FirstOrDefault(s => s.ID == entry.TrackID);
                     if (thisSong != null)
                     {
                         MbSong thisMbSong = allMbSongs.FirstOrDefault(s => s.Artist == thisSong.Artist && s.Title == thisSong.Title);

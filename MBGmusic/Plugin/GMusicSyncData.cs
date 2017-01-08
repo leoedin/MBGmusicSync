@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using MusicBeePlugin.GMusicAPI;
 using MusicBeePlugin.Models;
 using System.Threading.Tasks;
+using GooglePlayMusicAPI;
 
 namespace MusicBeePlugin
 {
@@ -19,8 +19,8 @@ namespace MusicBeePlugin
 
         public GMusicSyncData(Settings settings, Plugin.MusicBeeApiInterface mbApiInterface)
         {
-            _allPlaylists = new List<GMusicPlaylist>();
-            _allSongs = new List<GMusicSong>();
+            _allPlaylists = new List<Playlist>();
+            _allSongs = new List<Track>();
 
             _settings = settings;
 
@@ -31,11 +31,11 @@ namespace MusicBeePlugin
             _mbApiInterface = mbApiInterface;
         }
 
-        private List<GMusicPlaylist> _allPlaylists;
-        public List<GMusicPlaylist> AllPlaylists { get { return _allPlaylists; } }
+        private List<Playlist> _allPlaylists;
+        public List<Playlist> AllPlaylists { get { return _allPlaylists; } }
 
-        private List<GMusicSong> _allSongs;
-        public List<GMusicSong> AllSongs { get { return _allSongs; } }
+        private List<Track> _allSongs;
+        public List<Track> AllSongs { get { return _allSongs; } }
 
         
 
@@ -61,7 +61,7 @@ namespace MusicBeePlugin
         #region Fetch GMusic Information
 
         // The global-ish stuff we need to sync with Google Music
-        private APIOAuth api = new APIOAuth();
+        private GooglePlayMusicClient api = new GooglePlayMusicClient();
 
         public async void FetchLibraryAndPlaylists()
         {
@@ -70,13 +70,13 @@ namespace MusicBeePlugin
             _dataFetched = true;
         }
 
-        public async Task<List<GMusicSong>> FetchLibrary()
+        public async Task<List<Track>> FetchLibrary()
         {
             _allSongs = await api.GetLibraryAsync();
             return _allSongs;
         }
 
-        public async Task<List<GMusicPlaylist>> FetchPlaylists()
+        public async Task<List<Playlist>> FetchPlaylists()
         {
             _allPlaylists = await api.GetPlaylistsWithEntriesAsync();
             return _allPlaylists;
@@ -101,11 +101,11 @@ namespace MusicBeePlugin
                     // If there is one, clear it's contents, otherwise create one
                     // Unless it's been deleted, in which case pretend it doesn't exist.
                     // I'm not sure how to undelete a playlist, or even if you can
-                    GMusicPlaylist thisPlaylist = _allPlaylists.FirstOrDefault(p => p.Name == playlist.Name && p.Deleted == false);
+                    Playlist thisPlaylist = _allPlaylists.FirstOrDefault(p => p.Name == playlist.Name && p.Deleted == false);
                     String thisPlaylistID = "";
                     if (thisPlaylist != null)
                     {
-                        List<GMusicPlaylistEntry> allPlsSongs = thisPlaylist.Songs;
+                        List<PlaylistEntry> allPlsSongs = thisPlaylist.Songs;
 
                         if (allPlsSongs.Count > 0)
                         {
@@ -132,13 +132,13 @@ namespace MusicBeePlugin
                         playlistFiles = new string[0];
                     }
 
-                    List<GMusicSong> songsToAdd = new List<GMusicSong>();
+                    List<Track> songsToAdd = new List<Track>();
                     // And get the title and artist of each file, and add it to the GMusic playlist
                     foreach (string file in playlistFiles)
                     {
                         string title = _mbApiInterface.Library_GetFileTag(file, Plugin.MetaDataType.TrackTitle);
                         string artist = _mbApiInterface.Library_GetFileTag(file, Plugin.MetaDataType.Artist);
-                        GMusicSong gSong = _allSongs.FirstOrDefault(item => (item.Artist == artist && item.Title == title));
+                        Track gSong = _allSongs.FirstOrDefault(item => (item.Artist == artist && item.Title == title));
                         if (gSong != null)
                             songsToAdd.Add(gSong);
                     }
