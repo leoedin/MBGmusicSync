@@ -11,6 +11,7 @@ using System.Configuration;
 using MusicBeePlugin.Models;
 using System.Threading.Tasks;
 using GooglePlayMusicAPI;
+using System.Security;
 
 namespace MusicBeePlugin
 {
@@ -33,9 +34,47 @@ namespace MusicBeePlugin
             loginStatusLabel.Text = text;
         }
 
-        public Configure(PlaylistSync playlistSync, Settings settings)
+        public Configure(PlaylistSync playlistSync, Settings settings, Plugin.MusicBeeApiInterface mbApiInterface)
         {
             InitializeComponent();
+
+            foreach (Control control in this.Controls)
+            {
+                control.ForeColor = Color.FromArgb(mbApiInterface.Setting_GetSkinElementColour(
+                    MusicBeePlugin.Plugin.SkinElement.SkinInputPanel,
+                    MusicBeePlugin.Plugin.ElementState.ElementStateDefault,
+                    MusicBeePlugin.Plugin.ElementComponent.ComponentForeground));
+                control.BackColor = Color.FromArgb(mbApiInterface.Setting_GetSkinElementColour(
+                    MusicBeePlugin.Plugin.SkinElement.SkinInputControl,
+                    MusicBeePlugin.Plugin.ElementState.ElementStateDefault,
+                    MusicBeePlugin.Plugin.ElementComponent.ComponentBackground));
+
+                if (control.Controls.Count > 0)
+                {
+                    foreach (Control child in control.Controls)
+                    {
+                        child.ForeColor = Color.FromArgb(mbApiInterface.Setting_GetSkinElementColour(
+                            MusicBeePlugin.Plugin.SkinElement.SkinInputPanel,
+                            MusicBeePlugin.Plugin.ElementState.ElementStateDefault,
+                            MusicBeePlugin.Plugin.ElementComponent.ComponentForeground));
+                        child.BackColor = Color.FromArgb(mbApiInterface.Setting_GetSkinElementColour(
+                            MusicBeePlugin.Plugin.SkinElement.SkinInputControl,
+                            MusicBeePlugin.Plugin.ElementState.ElementStateDefault,
+                            MusicBeePlugin.Plugin.ElementComponent.ComponentBackground));
+                    }
+                }
+            }
+
+            this.ForeColor = Color.FromArgb(mbApiInterface.Setting_GetSkinElementColour(
+                MusicBeePlugin.Plugin.SkinElement.SkinInputPanel,
+                MusicBeePlugin.Plugin.ElementState.ElementStateDefault,
+                MusicBeePlugin.Plugin.ElementComponent.ComponentForeground));
+            this.BackColor = Color.FromArgb(mbApiInterface.Setting_GetSkinElementColour(
+                MusicBeePlugin.Plugin.SkinElement.SkinInputControl,
+                MusicBeePlugin.Plugin.ElementState.ElementStateDefault,
+                MusicBeePlugin.Plugin.ElementComponent.ComponentBackground));
+
+
 
             log = Logger.Instance;
             log.OnLogUpdated = new EventHandler(log_OnLogUpdated);

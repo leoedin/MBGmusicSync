@@ -86,7 +86,7 @@ namespace MusicBeePlugin
                 _configureForm = null;
             }
 
-            _configureForm = new Configure(_playlistSync, _settings);
+            _configureForm = new Configure(_playlistSync, _settings, mbApiInterface);
 
             _configureForm.Show();
         }
