@@ -16,115 +16,73 @@ namespace TestGMusicAPI
     {
         private List<GMusicPlaylist> AllPlaylists = new List<GMusicPlaylist>();
         private List<GMusicSong> AllSongs = new List<GMusicSong>();
+        private List<GMusicPlaylistEntry> AllEntries = new List<GMusicPlaylistEntry>();
 
         API api = new API();
+        APIOAuth apiOauth = new APIOAuth();
+
         public Form1()
         {
             InitializeComponent();
         }
 
-        private void loginButton_Click(object sender, EventArgs e)
+        private async void loginButton_Click(object sender, EventArgs e)
         {
-            string[] credentials = System.IO.File.ReadAllLines("C:\\\\Temp\\gmusic.txt");
-            api.OnLoginComplete = new EventHandler(delegate(object send2, EventArgs ee)
-            {
-                this.Invoke(new MethodInvoker(delegate
-                {
-                    this.statusLabel.Text = String.Format("Login complete, auth: {0}", api.AuthToken);
-                }));
-
-            });
-            api.Login(credentials[0], credentials[1]);
+            bool loggedIn = await apiOauth.LoginAsync(Secret.USERNAME, Secret.PASSWORD);
+            this.statusLabel.Text = String.Format("Login Status: {0}", loggedIn);
         }
 
-        private void getTracksButton_Click(object sender, EventArgs e)
+        private async void getTracksButton_Click(object sender, EventArgs e)
         {
-            api.OnGetAllSongsComplete = OnGetSongsComplete;
-            api.GetAllSongs();
-        }
-
-        private void OnGetSongsComplete(List<GMusicSong> songs)
-        {
-            AllSongs = songs;
-            this.Invoke(new MethodInvoker(delegate
+            List<GMusicSong> library = await apiOauth.GetLibraryAsync();
+            AllSongs = library;
+            foreach(GMusicSong song in library)
             {
-                foreach (GMusicSong song in songs)
-                {
-                    songListBox.Items.Add(song);
-                    
-                }
-                songTotalLabel.Text = "Total songs: " + Convert.ToString(songs.Count());
-            }));
+                songListBox.Items.Add(song);
+            }
+
+            songTotalLabel.Text = String.Format("Total songs: {0}", library.Count);
         }
 
         #region Get playlists
         // Get all the playlists tied to this account and display them
 
-        private void getPlaylistsButton_Click(object sender, EventArgs e)
+        private async void getPlaylistsButton_Click(object sender, EventArgs e)
         {
-            api.OnGetAllPlaylistsComplete = OnGetAllPlaylistSongs;
-            api.GetAllPlaylists();
-        }
-
-        private void OnGetAllPlaylistSongs(List<GMusicPlaylist> playlists)
-        {
+            List<GMusicPlaylist> playlists = await apiOauth.GetPlaylistsWithEntriesAsync();
             AllPlaylists = playlists;
-            this.Invoke(new MethodInvoker(delegate
+            playlistListBox.Items.Clear();
+            foreach (GMusicPlaylist playlist in playlists)
             {
-                int selectedPlaylist = playlistListBox.SelectedIndex;
-                playlistListBox.Items.Clear();
-                foreach (GMusicPlaylist playlist in playlists)
-                    if (!playlist.Deleted)
-                        playlistListBox.Items.Add(playlist);
-                playlistListBox.SelectedIndex = selectedPlaylist;
-            }));
+                playlistListBox.Items.Add(playlist);
+            }
         }
 
         #endregion
 
         #region Create playlists
-        private void createPlaylistButton_Click(object sender, EventArgs e)
+        private async void createPlaylistButton_Click(object sender, EventArgs e)
         {
-            api.OnCreatePlaylistComplete = CreatePlaylistDone;
-            api.CreatePlaylist(createPlaylistName.Text);
-        }
-
-        private void CreatePlaylistDone(MutateResponse response)
-        {
-            this.Invoke(new MethodInvoker(delegate
-            {
-                // Get the playlists again
-                getPlaylistsButton.PerformClick();
-            }));
+            await apiOauth.CreatePlaylistAsync(createPlaylistName.Text);
+            getPlaylistsButton.PerformClick();
         }
 
         #endregion
 
         #region Delete playlist
         // Deletes the playlist currently selected by the user
-        private void deletePlaylistButton_Click(object sender, EventArgs e)
+        private async void deletePlaylistButton_Click(object sender, EventArgs e)
         {
-            api.OnDeletePlaylistComplete = DeletePlaylistDone;
             GMusicPlaylist selectedPlaylist = (GMusicPlaylist)playlistListBox.SelectedItem;
-            api.DeletePlaylist(selectedPlaylist.ID);
-        }
-
-        private void DeletePlaylistDone(MutateResponse response)
-        {
-            this.Invoke(new MethodInvoker(delegate
-            {
-                statusLabel.Text += "Deleted: " + response.ID;
-                // Get the playlists again
-                getPlaylistsButton.PerformClick();
-            }));
+            await apiOauth.DeletePlaylistAsync(selectedPlaylist.ID);
+            getPlaylistsButton.PerformClick();
         }
 
         #endregion
 
         #region Modify playlists
-        private void addSongsButton_Click(object sender, EventArgs e)
+        private async void addSongsButton_Click(object sender, EventArgs e)
         {
-            api.OnAddToPlaylistComplete = OnChangePlaylist;
             ListBox.SelectedObjectCollection songsSelected = songListBox.SelectedItems;
             List<GMusicSong> songsList = new List<GMusicSong>();
             foreach (GMusicSong song in songsSelected)
@@ -132,26 +90,18 @@ namespace TestGMusicAPI
 
             GMusicPlaylist selectedPlaylist = (GMusicPlaylist)playlistListBox.SelectedItem;
 
-            api.AddToPlaylist(selectedPlaylist.ID, songsList);
+            await apiOauth.AddToPlaylistAsync(selectedPlaylist.ID, songsList);
+            getPlaylistsButton.PerformClick();
 
         }
 
         // This could delete multiple selections at once, but it doesn't
-        private void deleteSong_Click(object sender, EventArgs e)
+        private async void deleteSong_Click(object sender, EventArgs e)
         {
-            api.OnDeleteFromPlaylistComplete = OnChangePlaylist;
             GMusicSong selectedSong = (GMusicSong)playlistSongsBox.SelectedItem;
             GMusicPlaylist selectedPlaylist = (GMusicPlaylist)playlistListBox.SelectedItem;
             GMusicPlaylistEntry songEntry = selectedPlaylist.Songs.First(s => s.TrackID == selectedSong.ID);
-            api.DeleteFromPlaylist(new List<GMusicPlaylistEntry>{songEntry});
-        }
-
-        private void OnChangePlaylist(MutatePlaylistResponse response)
-        {
-            this.Invoke(new MethodInvoker(delegate
-                {
-                    getPlaylistsButton.PerformClick();
-                }));
+            await apiOauth.RemoveFromPlaylistAsync(new List<GMusicPlaylistEntry> { songEntry });
         }
 
         #endregion
@@ -166,26 +116,21 @@ namespace TestGMusicAPI
                 if (!song.Deleted)
                 {
                     GMusicSong thisSong = AllSongs.FirstOrDefault(s => s.ID == song.TrackID);
-                    playlistSongsBox.Items.Add(thisSong);
+                    if (thisSong != null)
+                    {
+                        playlistSongsBox.Items.Add(thisSong);
+                    }
                 }
             }
         }
 
         #endregion
 
-        private void renameButton_Click(object sender, EventArgs e)
+        private async void renameButton_Click(object sender, EventArgs e)
         {
-            api.OnRenamePlaylistComplete = OnRenamePlaylist;
             GMusicPlaylist selectedPlaylist = (GMusicPlaylist)playlistListBox.SelectedItem;
-            api.RenamePlaylist(selectedPlaylist.ID, renamePlaylistTextBox.Text);
-        }
-
-        private void OnRenamePlaylist(MutateResponse response)
-        {
-            this.Invoke(new MethodInvoker(delegate
-            {
-                getPlaylistsButton.PerformClick();
-            }));
+            await apiOauth.UpdatePlaylistAsync(selectedPlaylist.ID, renamePlaylistTextBox.Text, description:"test test new description test");
+            getPlaylistsButton.PerformClick();
         }
 
       
